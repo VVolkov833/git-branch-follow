@@ -58,5 +58,5 @@ add_action( 'rest_api_init', function () {
         ],
     ];
 
-    register_rest_route( FCGBF_SLUG.'/v1', '/(?P<id>\d{1,16})', $route_args );
+    register_rest_route( FCGBF_ENDPOINT, '/(?P<id>\d{1,16})', $route_args );
 });

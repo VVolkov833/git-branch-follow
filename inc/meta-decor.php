@@ -12,5 +12,10 @@ add_action( 'admin_enqueue_scripts', function($hook) {
 
     wp_enqueue_style( FCGBF_PREF.'style', FCGBF_URL.'assets/style.css', [], FCGBF_VER );
     wp_enqueue_script( FCGBF_PREF.'scripts', FCGBF_URL.'assets/scripts.js', [], FCGBF_VER );
+    wp_localize_script(FCGBF_PREF.'scripts', FCGBF_SLUG.'_vars', [
+        'SLUG' => FCGBF_SLUG,
+        'PREF' => FCGBF_PREF,
+        'URL' => get_rest_url( null, '/'.FCGBF_ENDPOINT.'/' ),
+    ]);
 
 });

@@ -60,8 +60,8 @@ function rep_infos() {
         'className' => 'button',
     ]);
 
-    ?><input type="hidden" name="<?php echo esc_attr( FCGBF_PREF ) ?>nonce" value="<?= esc_attr( wp_create_nonce( FCGBF_PREF.'nonce' ) ) ?>"><?php
-    ?><input type="hidden" id="<?php echo esc_attr( FCGBF_PREF ) ?>rest-nonce" value="<?= esc_attr( wp_create_nonce( FCGBF_PREF.'wp_rest' ) ) ?>"><?php
+    ?><input type="hidden" name="<?php echo esc_attr( FCGBF_PREF ) ?>nonce" value="<?php echo esc_attr( wp_create_nonce( FCGBF_PREF.'nonce' ) ) ?>"><?php
+    ?><input type="hidden" id="<?php echo esc_attr( FCGBF_PREF ) ?>rest-nonce" value="<?php echo esc_attr( wp_create_nonce( FCGBF_PREF.'wp_rest' ) ) ?>"><?php
 
     ?></div><?php
 

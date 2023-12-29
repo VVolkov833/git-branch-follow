@@ -27,6 +27,8 @@ define( 'FCGBF_BSN', plugin_basename(__FILE__) );
 
 define( 'FCGBF_BRANCH', 'main' );
 
+define( 'FCGBF_ENDPOINT', FCGBF_SLUG.'/v1' );
+
 
 require FCGBF_DIR . 'inc/post-type.php';
 require FCGBF_DIR . 'inc/fields.php';
