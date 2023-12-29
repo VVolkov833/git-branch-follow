@@ -1,0 +1,10 @@
+.fcgbf-fields {
+    display: flex;
+    gap: 10px;
+}
+.fcgbf-fields input {
+    flex: 1;
+}
+#fcgbf-rep-branch {
+    max-width: 100px;
+}
