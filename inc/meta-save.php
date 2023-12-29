@@ -12,7 +12,7 @@ add_action( 'save_post', function( $postID ) {
 
     $post = get_post( $postID );
     if ( $post->post_type !== FCGBF_SLUG ) { return; }
-    if ( $post->post_type === 'revision' ) { return; } // update_post_meta fixes the id to the parent, but id can be used before
+    if ( $post->post_type === 'revision' ) { return; }
 
     $fields = [ 'rep-url', 'rep-api-key', 'rep-branch' ];
 

@@ -25,12 +25,15 @@ define( 'FCGBF_URL', plugin_dir_url( __FILE__ ) );
 define( 'FCGBF_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FCGBF_BSN', plugin_basename(__FILE__) );
 
+define( 'FCGBF_BRANCH', 'main' );
+
 
 require FCGBF_DIR . 'inc/post-type.php';
 require FCGBF_DIR . 'inc/fields.php';
 require FCGBF_DIR . 'inc/meta-print.php';
 require FCGBF_DIR . 'inc/meta-decor.php';
 require FCGBF_DIR . 'inc/meta-save.php';
+require FCGBF_DIR . 'inc/api-fetch.php';
 
 
 // ++install / uninstall hooks with schedule

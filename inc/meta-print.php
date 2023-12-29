@@ -40,7 +40,7 @@ function rep_infos() {
     input( (object) [
         'name' => 'rep-branch',
         'title' => 'GitHub Repository Branch',
-        'placeholder' => 'main',
+        'placeholder' => FCGBF_BRANCH,
         'value' => get_post_meta( $post->ID, FCGBF_PREF.'rep-branch' )[0] ?? '',
     ]);
 
@@ -61,6 +61,12 @@ function rep_infos() {
     ]);
 
     ?><input type="hidden" name="<?php echo esc_attr( FCGBF_PREF ) ?>nonce" value="<?= esc_attr( wp_create_nonce( FCGBF_PREF.'nonce' ) ) ?>"><?php
+    ?><input type="hidden" id="<?php echo esc_attr( FCGBF_PREF ) ?>rest-nonce" value="<?= esc_attr( wp_create_nonce( FCGBF_PREF.'wp_rest' ) ) ?>"><?php
 
     ?></div><?php
+
+    ?><div class="<?php echo FCGBF_PREF ?>updated"></div><?php
+
+    ?><div class="<?php echo FCGBF_PREF ?>current"></div><?php
+
 }
