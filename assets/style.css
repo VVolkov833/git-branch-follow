@@ -4,6 +4,7 @@
 
 .fcgbf-fields {
     display: flex;
+    align-items: center;
     gap: 10px;
 }
 .fcgbf-fields input {
@@ -12,10 +13,14 @@
 #fcgbf-rep-branch {
     max-width: 100px;
 }
-
-.fcgbf-updated {
-    border:1px dotted red;
+#fcgbf-rep-install {
+    margin-left: auto;
 }
-.fcgbf-current {
-    border:1px dotted blue;
+.fcgbf-infos {
+    display: flex;
+    gap: 20px;
+}
+.fcgbf-infos > * {
+    width: 50%;
+    border:1px dotted red;
 }

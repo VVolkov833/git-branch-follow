@@ -5,11 +5,27 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'rest_api_init', function () {
 
+    $branch_infos = function($args) {
+        $headers = [
+            'Authorization' => 'Bearer '.$args['rep_api_key'],
+            'Accept' => 'application/vnd.github+json',
+            'X-GitHub-Api-Version' => '2022-11-28',
+        ];
+        $response = wp_remote_get(
+            'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/branches/'.$args['rep_branch'],
+            ['headers' => $headers]
+        );
+        return $response;
+    };
+
     $route_args = [
         'methods'  => 'GET',
-        'callback' => function(\WP_REST_Request $request) {
+        'callback' => function(\WP_REST_Request $request) use ($branch_infos) {
 
-            if ( FCGBF_DEV ) { usleep( rand(0, 1000000) ); } // simulate server responce delay
+            if ( FCGBF_DEV ) { // simulate server responce delay
+                nocache_headers();
+                usleep( rand(0, 1000000) );
+            }
 
             $wp_query_args = [
                 'post_type' => FCGBF_SLUG,
@@ -23,19 +39,34 @@ add_action( 'rest_api_init', function () {
                 return new \WP_Error( 'nothing_found', 'No results found', ['status' => 404] );
             }
 
-            $result = [];
+            $details = [];
             while ( $query->have_posts() ) {
                 $p = $query->next_post();
-                $result = [
+                $details = [
                     'rep_url' => get_post_meta( $p->ID, FCGBF_PREF.'rep-url' )[0] ?? '',
                     'rep_api_key' => get_post_meta( $p->ID, FCGBF_PREF.'rep-api-key' )[0] ?? '',
                     'rep_branch' => get_post_meta( $p->ID, FCGBF_PREF.'rep-branch' )[0] ?? FCGBF_BRANCH,
                 ];
+                break;
             }
 
-            if ( FCGBF_DEV ) { nocache_headers(); }
+            if ( preg_match( '/^https:\/\/github\.com\/([^\/]+)\/([^\/]+)$/', $details['rep_url'], $matches) ) {
+                list( , $details['rep_author'], $details['rep_name'] ) = $matches;
+            } else {
+                return new \WP_Error( 'wrong_format', 'Wrong Repository Link format', ['status' => 422] );
+            }
 
-            return new \WP_REST_Response( $result, 200 );
+            //return new \WP_REST_Response( $details, 200 );
+            //return new \WP_REST_Response( $branch_infos($details), 200 );
+
+            $response = $branch_infos($details);
+            
+            if ( is_wp_error( $response ) ) {
+                return $response;
+            }
+
+            return new \WP_REST_Response( json_decode(stripslashes(wp_remote_retrieve_body( $response ))), wp_remote_retrieve_response_code( $response ) );
+
         },
         'permission_callback' => function() {
             if ( empty( $_SERVER['HTTP_REFERER'] ) ) { return false; }
@@ -55,8 +86,19 @@ add_action( 'rest_api_init', function () {
                     return (int) trim($param);
                 },
             ],
+            'action' => [
+                'description' => 'Check or update',
+                'type'        => 'string',
+                'required'    => true,
+                'validate_callback' => function($param) {
+                    return in_array(trim($param), ['check', 'update']) ? true : false;
+                },
+                'sanitize_callback' => function($param, \WP_REST_Request $request, $key) {
+                    return trim($param);
+                },
+            ],
         ],
     ];
 
-    register_rest_route( FCGBF_ENDPOINT, '/(?P<id>\d{1,16})', $route_args );
+    register_rest_route( FCGBF_ENDPOINT, '/(?P<id>\d{1,16})/(?P<action>(check|update))', $route_args );
 });

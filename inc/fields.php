@@ -32,3 +32,25 @@ function button($a) {
     </button>
     <?php
 }
+
+function select($a) {
+    ?>
+    <select
+        name="<?php echo esc_attr( FCGBF_PREF . $a->name ) ?>"
+        id="<?php echo esc_attr( FCGBF_PREF . $a->name ) ?>"
+        title="<?php echo esc_attr( $a->title ) ?>"
+        class="<?php echo isset( $a->className ) ? esc_attr( $a->className ) : '' ?>"><?php
+
+        if ( isset( $a->placeholder ) ) { ?>
+            <option value=""><?php echo esc_html( $a->placeholder ) ?></option>
+        <?php } ?>
+
+        <?php foreach ( $a->options as $k => $v ) { ?>
+            <option
+                value="<?php echo esc_attr( $k ) ?>"
+                <?php echo isset( $a->value ) && $a->value === $k ? 'selected' : '' ?>
+            ><?php echo esc_html( $v ) ?></option>
+        <?php } ?>
+    </select>
+    <?php
+}
