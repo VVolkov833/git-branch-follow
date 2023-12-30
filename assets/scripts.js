@@ -15,20 +15,31 @@
             const checked_field = el(`.${PREF}checked`)
 
             try {
-                let response = await fetch(
-                    url,
-                    {
-                        method: 'get',
-                        headers: { 'X-WP-Nonce': nonce },
-                    }
-                );
-        
+                let getResponse = async () => {
+                    return fetch(
+                        url,
+                        {
+                            method: 'get',
+                            headers: { 'X-WP-Nonce': nonce },
+                        }
+                    );
+                };
+
                 //let responseData = await response.text();
                 //response_field.innerText = `${responseData}`;
 
-                let jsonData = await response.json();
-                response_field.innerHTML = `<h3>Full responce:</h3><pre>${JSON.stringify(jsonData, null, 2)}</pre>`;
-
+//*
+                try {
+                    let response = await getResponse();
+                    let jsonData = await response.json()
+                    response_field.innerHTML = `<h3>Full responce:</h3><pre>${JSON.stringify(jsonData, null, 2)}</pre>`;
+                } catch (error) {
+                    let response = await getResponse();
+                    const textData = await response.text()
+                    response_field.innerHTML = `<h3>Error response:</h3><pre>${textData}</pre>`;
+                }
+//*/
+/*
                 if (response.status === 200) {
                     checked_field.innerHTML = `
                     <h3>Fetched:</h3>
@@ -43,7 +54,7 @@
                         <dd>${jsonData?.name}</dd>
                     </dl>`;
                 }
-
+//*/
             } catch (error) {
                 response_field.innerText = `Fetch error: ${error.message}`;
             }

@@ -18,9 +18,66 @@ add_action( 'rest_api_init', function () {
         return $response;
     };
 
+    $deleteFolderContents = function($folder) use (&$deleteFolderContents) {
+        if (@is_dir($folder) && $dh = @opendir($folder)) {
+            while (($file = readdir($dh)) !== false) {
+                if ($file != '.' && $file != '..') {
+                    $path = $folder . '/' . $file;
+                    is_dir($path) ? $deleteFolderContents($path) && rmdir($path) : unlink($path);
+                }
+            }
+            closedir($dh);
+        }
+    };
+
+    $override_dest = function($args) use ($deleteFolderContents){
+        $zipFileUrl = 'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/zipball/'.$args['rep_branch'];
+        $downloadHeaders = array(
+            'Authorization' => 'Bearer '.$args['rep_api_key'],
+            'X-GitHub-Api-Version' => '2022-11-28',
+        );
+    
+        $zipFileContents = wp_remote_get($zipFileUrl, array('headers' => $downloadHeaders));
+    
+        if ( is_wp_error($zipFileContents) || $zipFileContents['response']['code'] !== 200) return $zipFileContents;
+
+        // download
+        $zipFilePath = WP_CONTENT_DIR.'/upgrade/'.$args['rep_name'].'zip';
+        file_put_contents($zipFilePath, $zipFileContents['body']);
+
+        // delete the existing contents
+        $destDir = WP_CONTENT_DIR.'/'.$args['rep_dest'];
+        // ++check if zip library exists else error
+        $deleteFolderContents($destDir);
+
+        // unzip to dest
+        $zip = new ZipArchive();
+        if ($zip->open($zipFilePath) === true) {
+
+            if (!file_exists($destDir)) {
+                mkdir($destDir, 0755, true); // ++return error
+            }
+
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                $fileInfo = pathinfo($filename);
+                $targetPath = $destDir.'/'.$fileInfo['basename'];
+                copy("zip://$zipFilePath#$filename", $targetPath);
+            }
+
+            $zip->close();
+        }
+
+        // delete zip
+        unlink( $zipFilePath );
+
+        // update the meta
+ 
+    };
+
     $route_args = [
         'methods'  => 'GET',
-        'callback' => function(\WP_REST_Request $request) use ($branch_infos) {
+        'callback' => function(\WP_REST_Request $request) use ($branch_infos, $override_dest) {
 
             if ( FCGBF_DEV ) { // simulate server responce delay
                 nocache_headers();
@@ -35,9 +92,7 @@ add_action( 'rest_api_init', function () {
 
             $query = new \WP_Query( $wp_query_args );
 
-            if ( !$query->have_posts() ) {
-                return new \WP_Error( 'nothing_found', 'No results found', ['status' => 404] );
-            }
+            if ( !$query->have_posts() ) { return new \WP_Error( 'nothing_found', 'No results found', ['status' => 404] ); }
 
             $details = [];
             while ( $query->have_posts() ) {
@@ -46,6 +101,7 @@ add_action( 'rest_api_init', function () {
                     'rep_url' => get_post_meta( $p->ID, FCGBF_PREF.'rep-url' )[0] ?? '',
                     'rep_api_key' => get_post_meta( $p->ID, FCGBF_PREF.'rep-api-key' )[0] ?? '',
                     'rep_branch' => get_post_meta( $p->ID, FCGBF_PREF.'rep-branch' )[0] ?? FCGBF_BRANCH,
+                    'rep_dest' => get_post_meta( $p->ID, FCGBF_PREF.'rep-dest' )[0] ?? FCGBF_BRANCH,
                 ];
                 break;
             }
@@ -61,8 +117,10 @@ add_action( 'rest_api_init', function () {
 
             $response = $branch_infos($details);
             
-            if ( is_wp_error( $response ) ) {
-                return $response;
+            if ( is_wp_error( $response ) ) { return $response; }
+
+            if ( $request['action'] === 'install' ) {
+                $override_dest($details);       
             }
 
             return new \WP_REST_Response( json_decode(stripslashes(wp_remote_retrieve_body( $response ))), wp_remote_retrieve_response_code( $response ) );
