@@ -82,8 +82,8 @@ function rep_infos() {
     <input type="hidden" id="<?php echo esc_attr( FCGBF_PREF ) ?>rest-nonce" value="<?php echo esc_attr( wp_create_nonce( 'wp_rest' ) ) ?>">
 
     <div class="<?php echo FCGBF_PREF ?>infos">
-        <div class="<?php echo FCGBF_PREF ?>checked"></div>
         <div class="<?php echo FCGBF_PREF ?>current"></div>
+        <div class="<?php echo FCGBF_PREF ?>checked"></div>
     </div>
     <div class="<?php echo FCGBF_PREF ?>response"></div>
     <?php

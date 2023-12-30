@@ -49,10 +49,9 @@
             }
         };
     };
-    const check = fetch_data('check');
 
 
-    let a = setInterval(async function() {
+    let a = setInterval(function() {
         const d = document;
         let b = d.readyState;
         if (b !== 'complete' && b !== 'interactive') {
@@ -62,9 +61,8 @@
         clearInterval(a);
         a = null;
 
-        el('#fcgbf-rep-check').addEventListener('click', e => {
-            check();
-        });
+        el('#fcgbf-rep-check').addEventListener('click', e => fetch_data('check')());
+        el('#fcgbf-rep-install').addEventListener('click', e => fetch_data('install')());
     }, 300);
 })();
 

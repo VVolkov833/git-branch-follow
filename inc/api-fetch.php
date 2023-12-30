@@ -87,11 +87,11 @@ add_action( 'rest_api_init', function () {
                 },
             ],
             'action' => [
-                'description' => 'Check or update',
+                'description' => 'Check or install',
                 'type'        => 'string',
                 'required'    => true,
                 'validate_callback' => function($param) {
-                    return in_array(trim($param), ['check', 'update']) ? true : false;
+                    return in_array(trim($param), ['check', 'install']) ? true : false;
                 },
                 'sanitize_callback' => function($param, \WP_REST_Request $request, $key) {
                     return trim($param);
@@ -100,5 +100,5 @@ add_action( 'rest_api_init', function () {
         ],
     ];
 
-    register_rest_route( FCGBF_ENDPOINT, '/(?P<id>\d{1,16})/(?P<action>(check|update))', $route_args );
+    register_rest_route( FCGBF_ENDPOINT, '/(?P<id>\d{1,16})/(?P<action>(check|install))', $route_args );
 });
