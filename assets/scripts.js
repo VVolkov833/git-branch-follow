@@ -16,14 +16,9 @@
     
         const doneLabel = data.extended_locally.checked ? 'Last Checked' : 'Last Updated';
     
-        const formatDate = (timestamp) => {
-            const date = new Date(timestamp * 1000);
-            return new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(date);
-        };
-    
         const print = {
-            [doneLabel]: formatDate(data.extended_locally.date),
-            "Commiter Date": formatDate(Date.parse(committer.date)),
+            [doneLabel]: new Date(data.extended_locally.date*1000).toISOString().split('.')[0]+'Z',
+            "Commiter Date": committer.date,
             "Commiter Name": committer.name,
             "Commiter Message": commit.message,
             "Branch": data.name,

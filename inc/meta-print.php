@@ -17,12 +17,6 @@ add_action( 'add_meta_boxes', function() {
 
 });
 
-function date_format() {
-    $date_format = get_option('date_format');
-    $date_format = strpos($date_format, 'H') || strpos($date_format, 'h') ? $date_format : $date_format.' H:i:s';
-    return $date_format;
-}
-
 function format_data($heading, $data) {
     if ( empty($data) ) { return ''; }
 
@@ -30,11 +24,15 @@ function format_data($heading, $data) {
     $committer = $commit->committer;
 
     $done_label = isset($data->extended_locally->checked) ? 'Last Checked' : 'Last Updated';
-    $date_format = date_format();
+    
+    $originalTimezone = date_default_timezone_get();
+    date_default_timezone_set('UTC');
+    $operation_date = date( 'Y-m-d\TH:i:s\Z', $data->extended_locally->date );
+    date_default_timezone_set($originalTimezone);
 
     $print = [
-        $done_label => date( $date_format, $data->extended_locally->date ),
-        "Commiter Date" => date( $date_format, strtotime($committer->date) ),
+        $done_label => $operation_date,
+        "Commiter Date" => $committer->date,
         "Commiter Name" => $committer->name,
         "Commiter Message" => $commit->message,
         "Branch" => $data->name,
