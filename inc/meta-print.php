@@ -32,7 +32,7 @@ function format_data($heading, $data) {
 
     $print = [
         $done_label => $operation_date,
-        "Commiter Date" => $committer->date,
+        "Commiter Date" => $committer->date_highlight ?? $committer->date,
         "Commiter Name" => $committer->name,
         "Commiter Message" => $commit->message,
         "Branch" => $data->name,
@@ -43,7 +43,7 @@ function format_data($heading, $data) {
     <dl>
     <?php foreach ($print as $k => $v) { ?>
         <dt><?php echo esc_html($k) ?></dt>
-        <dd><?php echo esc_html($v) ?></dd>
+        <dd><?php echo $v ?></dd>
     <?php } ?>
     </dl>
     <?php
@@ -104,6 +104,13 @@ function rep_infos() {
             'value' => 'Install / Update',
             'className' => 'button',
         ]);
+
+        $rep_current = get_post_meta( $post->ID, FCGBF_PREF.'rep-current' )[0] ?? [];
+        $rep_checked = get_post_meta( $post->ID, FCGBF_PREF.'rep-new' )[0] ?? [];
+        if ( $rep_current->commit->commit->committer->date === $rep_checked->commit->commit->committer->date ) {
+            $rep_checked->commit->commit->committer->date_highlight = '<font color="#22c55e">'.$rep_checked->commit->commit->committer->date.'</font>';
+        }
+
         ?>
     </div>
 
@@ -111,8 +118,8 @@ function rep_infos() {
     <input type="hidden" id="<?php echo esc_attr( FCGBF_PREF ) ?>rest-nonce" value="<?php echo esc_attr( wp_create_nonce( 'wp_rest' ) ) ?>">
 
     <div class="<?php echo FCGBF_PREF ?>infos">
-        <div class="<?php echo FCGBF_PREF ?>current"><?php format_data( 'Current Version', get_post_meta( $post->ID, FCGBF_PREF.'rep-current' )[0] ?? [] ) ?></div>
-        <div class="<?php echo FCGBF_PREF ?>checked"><?php format_data( 'Available version', get_post_meta( $post->ID, FCGBF_PREF.'rep-new' )[0] ?? [] ) ?></div>
+        <div class="<?php echo FCGBF_PREF ?>current"><?php format_data( 'Current Version', $rep_current ) ?></div>
+        <div class="<?php echo FCGBF_PREF ?>checked"><?php format_data( 'Available version', $rep_checked ) ?></div>
     </div>
     <div class="<?php echo FCGBF_PREF ?>response"></div>
 
