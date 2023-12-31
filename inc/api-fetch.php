@@ -79,7 +79,7 @@ add_action( 'rest_api_init', function () {
         unlink( $zipFilePath );
 
         return [
-            "directory_updated" => true
+            "installed" => true
         ];
     };
 
@@ -134,16 +134,18 @@ add_action( 'rest_api_init', function () {
             if ( $request['action'] === 'install' ) {
                 $zipProcessed = $override_dest($details);
                 if ( is_wp_error( $zipProcessed ) ) { return $zipProcessed; }
-                $gitResponseBody->extended_locally = array_merge($gitResponseBody->extendedLocally, $zipProcessed, ["date" => time()]);
+                $gitResponseBody->extended_locally = (object) array_merge($gitResponseBody->extendedLocally, $zipProcessed, ["date" => time()]);
 
                 // update the meta
                 update_post_meta( $request['id'], FCGBF_PREF.'rep-current', $gitResponseBody );
                 delete_post_meta( $request['id'], FCGBF_PREF.'rep-new' );
             }
             if ( $request['action'] === 'check' ) {
-                $gitResponseBody->extended_locally = array_merge($gitResponseBody->extendedLocally, ["checked" => true], ["date" => time()]);
+                $gitResponseBody->extended_locally = (object) array_merge($gitResponseBody->extendedLocally, ["checked" => true], ["date" => time()]);
                 update_post_meta( $request['id'], FCGBF_PREF.'rep-new', $gitResponseBody );
             }
+
+            $gitResponseBody->extended_locally = (object) $gitResponseBody->extended_locally;
 
             return new \WP_REST_Response( $gitResponseBody, wp_remote_retrieve_response_code( $gitResponse ) );
 
