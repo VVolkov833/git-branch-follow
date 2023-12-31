@@ -22,5 +22,7 @@
 }
 .fcgbf-infos > * {
     width: 50%;
-    border:1px dotted red;
+}
+.fcgbf-response {
+    border: 1px dotted grey;
 }

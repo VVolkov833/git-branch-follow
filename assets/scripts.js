@@ -6,13 +6,57 @@
         el(`.${PREF}updated`).innerHTML = result;
     };
 
+    const formatData = (heading, data) => {
+        if (!data) {
+            return '';
+        }
+    
+        const commit = data.commit.commit;
+        const committer = commit.committer;
+    
+        const doneLabel = data.extended_locally.checked ? 'Last Checked' : 'Last Updated';
+    
+        const formatDate = (timestamp) => {
+            const date = new Date(timestamp * 1000);
+            return new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(date);
+        };
+    
+        const print = {
+            [doneLabel]: formatDate(data.extended_locally.date),
+            "Commiter Date": formatDate(Date.parse(committer.date)),
+            "Commiter Name": committer.name,
+            "Commiter Message": commit.message,
+            "Branch": data.name,
+        };
+    
+        const container = document.createElement('div');
+        const headingElement = document.createElement('h3');
+        headingElement.textContent = heading;
+        container.appendChild(headingElement);
+    
+        const dlElement = document.createElement('dl');
+        Object.entries(print).forEach(([k, v]) => {
+            const dtElement = document.createElement('dt');
+            dtElement.textContent = k;
+            dlElement.appendChild(dtElement);
+    
+            const ddElement = document.createElement('dd');
+            ddElement.textContent = v;
+            dlElement.appendChild(ddElement);
+        });
+        container.appendChild(dlElement);
+    
+        return container;
+    }
+
     const fetch_data = action => {
         return async () => {
             const post_id = val(`#post_ID`);
             const nonce = val(`#${PREF}rest-nonce`);
             const url = `${URL}${post_id}/${action}`;
-            const response_field = el(`.${PREF}response`)
-            const checked_field = el(`.${PREF}checked`)
+            const current_field = el(`.${PREF}current`);
+            const checked_field = el(`.${PREF}checked`);
+            const response_field = el(`.${PREF}response`);
 
             try {
                 let getResponse = async () => {
@@ -26,13 +70,21 @@
                 };
 
                 try {
-                    let response = await getResponse();
-                    let jsonData = await response.json()
+                    const response = await getResponse();
+                    const jsonData = await response.json();
+                    if ( jsonData.extended_locally?.checked === true ) {
+                        checked_field.innerHTML = '';
+                        checked_field.append( formatData('Just Checked', jsonData) );
+                    } else if ( jsonData.extended_locally?.installed === true ) {
+                        checked_field.innerHTML = '';
+                        current_field.innerHTML = '';
+                        current_field.append( formatData('Just Updated', jsonData) );
+                    }
                     response_field.innerHTML = `<h3>Full responce:</h3><pre>${JSON.stringify(jsonData, null, 2)}</pre>`;
                 } catch (error) {
-                    let response = await getResponse();
-                    const textData = await response.text()
-                    response_field.innerHTML = textData && `<h3>Error response:</h3><pre>${textData}</pre>`;
+                    const response = await getResponse();
+                    const textData = await response.text();
+                    response_field.innerHTML = textData ? `<h3>Error response:</h3><pre>${textData}</pre>` : `<h3>The response is empty</h3>`;
                 }
 //*/
 /*
@@ -52,7 +104,7 @@
                 }
 //*/
             } catch (error) {
-                response_field.innerText = `Fetch error: ${error.message}`;
+                response_field.innerText = `<h3>Fetch error:</h3><pre>${error.message}</pre>`;
             }
         };
     };

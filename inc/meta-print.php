@@ -17,15 +17,20 @@ add_action( 'add_meta_boxes', function() {
 
 });
 
+function date_format() {
+    $date_format = get_option('date_format');
+    $date_format = strpos($date_format, 'H') || strpos($date_format, 'h') ? $date_format : $date_format.' H:i:s';
+    return $date_format;
+}
+
 function format_data($heading, $data) {
     if ( empty($data) ) { return ''; }
 
     $commit = $data->commit->commit;
     $committer = $commit->committer;
 
-    $done_label = isset($data->extended_locally->checked) ? 'Last Checked' : 'Last Installed';
-    $date_format = get_option('date_format');
-    $date_format = strpos($date_format, 'H') || strpos($date_format, 'h') ? $date_format : $date_format.' H:i:s';
+    $done_label = isset($data->extended_locally->checked) ? 'Last Checked' : 'Last Updated';
+    $date_format = date_format();
 
     $print = [
         $done_label => date( $date_format, $data->extended_locally->date ),
