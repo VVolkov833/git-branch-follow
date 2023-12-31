@@ -49,7 +49,6 @@ function rep_infos() {
         button( (object) [
             'name' => 'rep-check',
             'title' => 'Check for existence / updates',
-            'id' => 'rep-check',
             'value' => 'Check',
             'className' => 'button',
         ]);
@@ -71,7 +70,6 @@ function rep_infos() {
         button( (object) [
             'name' => 'rep-install',
             'title' => 'Install or update the repository',
-            'id' => 'rep-install',
             'value' => 'Install / Update',
             'className' => 'button',
         ]);

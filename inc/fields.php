@@ -10,7 +10,7 @@ function input($a) {
         name="<?php echo esc_attr( FCGBF_PREF.$a->name ) ?>"
         id="<?php echo esc_attr( FCGBF_PREF.$a->name ) ?>"
         placeholder="<?php echo isset( $a->placeholder ) ? esc_attr( $a->placeholder )  : '' ?>"
-        title="<?php echo esc_attr( $a->title ) ?>"
+        title="<?php echo isset( $a->title ) ? esc_attr( $a->title ) : '' ?>"
         value="<?php echo isset( $a->value ) ? esc_attr( $a->value ) : '' ?>"
         class="<?php echo isset( $a->className ) ? esc_attr( $a->className ) : '' ?>"
     />
@@ -22,7 +22,7 @@ function button($a) {
     <button type="button"
         name="<?php echo esc_attr( FCGBF_PREF.$a->name ) ?>"
         id="<?php echo esc_attr( FCGBF_PREF.$a->name ) ?>"
-        title="<?php echo esc_attr( $a->title ) ?>"
+        title="<?php echo isset( $a->title ) ? esc_attr( $a->title ) : '' ?>"
         class="<?php echo isset( $a->className ) ? esc_attr( $a->className ) : '' ?>"
     >
         <?php if (isset($a->imageSrc)) { ?>
@@ -38,7 +38,7 @@ function select($a) {
     <select
         name="<?php echo esc_attr( FCGBF_PREF . $a->name ) ?>"
         id="<?php echo esc_attr( FCGBF_PREF . $a->name ) ?>"
-        title="<?php echo esc_attr( $a->title ) ?>"
+        title="<?php echo isset( $a->title ) ? esc_attr( $a->title ) : '' ?>"
         class="<?php echo isset( $a->className ) ? esc_attr( $a->className ) : '' ?>"><?php
 
         if ( isset( $a->placeholder ) ) { ?>

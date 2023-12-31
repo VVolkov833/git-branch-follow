@@ -25,10 +25,6 @@
                     );
                 };
 
-                //let responseData = await response.text();
-                //response_field.innerText = `${responseData}`;
-
-//*
                 try {
                     let response = await getResponse();
                     let jsonData = await response.json()
@@ -36,7 +32,7 @@
                 } catch (error) {
                     let response = await getResponse();
                     const textData = await response.text()
-                    response_field.innerHTML = `<h3>Error response:</h3><pre>${textData}</pre>`;
+                    response_field.innerHTML = textData && `<h3>Error response:</h3><pre>${textData}</pre>`;
                 }
 //*/
 /*

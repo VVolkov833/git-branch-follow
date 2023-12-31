@@ -23,7 +23,7 @@ add_action( 'rest_api_init', function () {
             while (($file = readdir($dh)) !== false) {
                 if ($file != '.' && $file != '..') {
                     $path = $folder . '/' . $file;
-                    is_dir($path) ? $deleteFolderContents($path) && rmdir($path) : unlink($path);
+                    is_dir($path) ? $deleteFolderContents($path) && @rmdir($path) : @unlink($path);
                 }
             }
             closedir($dh);
@@ -43,35 +43,42 @@ add_action( 'rest_api_init', function () {
 
         // download
         $zipFilePath = WP_CONTENT_DIR.'/upgrade/'.$args['rep_name'].'zip';
-        file_put_contents($zipFilePath, $zipFileContents['body']);
+        if ( file_put_contents($zipFilePath, $zipFileContents['body']) === false ) {
+            return new \WP_Error( 'zip_not_copied', 'Zip file couldn not be created', ['status' => 418] );
+        }
 
         // delete the existing contents
-        $destDir = WP_CONTENT_DIR.'/'.$args['rep_dest'];
-        // ++check if zip library exists else error
-        $deleteFolderContents($destDir);
+        $destDir = WP_CONTENT_DIR.'/'.$args['rep_dest'].'/'.$args['rep_name'];
+        $deleteFolderContents($destDir); // ++error
 
         // unzip to dest
-        $zip = new ZipArchive();
-        if ($zip->open($zipFilePath) === true) {
-
-            if (!file_exists($destDir)) {
-                mkdir($destDir, 0755, true); // ++return error
-            }
-
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $filename = $zip->getNameIndex($i);
-                $fileInfo = pathinfo($filename);
-                $targetPath = $destDir.'/'.$fileInfo['basename'];
-                copy("zip://$zipFilePath#$filename", $targetPath);
-            }
-
-            $zip->close();
+        if ( !class_exists('ZipArchive') ) {
+            return new \WP_Error( 'zip_cant_be_proceeded', 'ZipArchive library is not installed', ['status' => 418] );
         }
+        $zip = new \ZipArchive();
+        if ( $zip->open($zipFilePath) !== true ) {
+            return new \WP_Error( 'zip_cant_be_opened', 'Zip archive file seem to be broken', ['status' => 418] );
+        }
+
+        if (!file_exists($destDir)) {
+            if (!mkdir($destDir, 0755, true)) {
+                return new \WP_Error( 'couldnt_create_directory', 'Could not create the destination directory', ['status' => 418] );
+            }
+        }
+
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            $fileInfo = pathinfo($filename);
+            $targetPath = $destDir.'/'.$fileInfo['basename'];
+            copy("zip://$zipFilePath#$filename", $targetPath);
+        }
+
+        $zip->close();
 
         // delete zip
         unlink( $zipFilePath );
 
-        // update the meta
+        return true;
  
     };
 
@@ -116,12 +123,14 @@ add_action( 'rest_api_init', function () {
             //return new \WP_REST_Response( $branch_infos($details), 200 );
 
             $response = $branch_infos($details);
-            
             if ( is_wp_error( $response ) ) { return $response; }
 
-            if ( $request['action'] === 'install' ) {
-                $override_dest($details);       
+            if ( $request['action'] === 'install' ) { // ++extend
+                $response = $override_dest($details);
+                if ( is_wp_error( $response ) ) { return $response; }
             }
+
+            // update the meta
 
             return new \WP_REST_Response( json_decode(stripslashes(wp_remote_retrieve_body( $response ))), wp_remote_retrieve_response_code( $response ) );
 
