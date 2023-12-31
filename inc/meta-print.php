@@ -107,8 +107,29 @@ function rep_infos() {
 
         $rep_current = get_post_meta( $post->ID, FCGBF_PREF.'rep-current' )[0] ?? [];
         $rep_checked = get_post_meta( $post->ID, FCGBF_PREF.'rep-new' )[0] ?? [];
-        if ( $rep_current->commit->commit->committer->date === $rep_checked->commit->commit->committer->date ) {
-            $rep_checked->commit->commit->committer->date_highlight = '<font color="#22c55e">'.$rep_checked->commit->commit->committer->date.'</font>';
+
+        $compare_dates = function($date1, $date2) {
+            $dateTime1 = new \DateTime($date1);
+            $dateTime2 = new \DateTime($date2);
+        
+            if ($dateTime1 < $dateTime2) {
+                return -1; // $date1 is earlier than $date2
+            } elseif ($dateTime1 > $dateTime2) {
+                return 1; // $date1 is later than $date2
+            } else {
+                return 0; // $date1 and $date2 are equal
+            }
+        };
+        $compared = $compare_dates($rep_current->commit->commit->committer->date, $rep_checked->commit->commit->committer->date );
+
+        if ($compared === -1) {
+            $highlight_color = '#22c55e';
+        }
+        if ($compared === 1) {
+            $highlight_color = '#facc15';
+        }
+        if (!$compared) {
+            $rep_checked->commit->commit->committer->date_highlight = '<strong style="color:'.$highlight_color.'">'.$rep_checked->commit->commit->committer->date.'</strong>';
         }
 
         ?>
