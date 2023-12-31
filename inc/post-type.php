@@ -1,9 +1,8 @@
 <?php
 
-// admin side
-
 namespace FC\GitBranchFollow;
 defined( 'ABSPATH' ) || exit;
+
 
 add_action( 'init', function() {
     $shorter = [

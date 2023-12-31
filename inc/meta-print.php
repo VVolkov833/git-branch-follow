@@ -128,7 +128,7 @@ function rep_infos() {
         if ($compared === 1) {
             $highlight_color = '#facc15';
         }
-        if (!$compared) {
+        if ($compared) {
             $rep_checked->commit->commit->committer->date_highlight = '<strong style="color:'.$highlight_color.'">'.$rep_checked->commit->commit->committer->date.'</strong>';
         }
 
