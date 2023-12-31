@@ -24,7 +24,20 @@ add_action( 'save_post', function( $postID ) {
         }
         update_post_meta( $postID, $f, $new_value );
     }
+
 });
+
+// update the title
+add_filter('wp_insert_post_data', function ($data, $postarr) {
+    if ( $data['post_type'] !== FCGBF_SLUG || !current_user_can('administrator') ) { return; }
+
+    $new_title = get_post_meta($postarr['ID'], FCGBF_PREF . 'rep-url', true);
+    if (empty($new_title)) { return; }
+
+    $data['post_title'] = $new_title;
+
+    return $data;
+}, 10, 2);
 
 
 function sanitize_meta( $value, $field, $postID ) {
