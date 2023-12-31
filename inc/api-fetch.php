@@ -5,17 +5,17 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'rest_api_init', function () {
 
-    $branch_infos = function($args) {
+    $gitBranchInfos = function($args) {
         $headers = [
             'Authorization' => 'Bearer '.$args['rep_api_key'],
             'Accept' => 'application/vnd.github+json',
             'X-GitHub-Api-Version' => '2022-11-28',
         ];
-        $response = wp_remote_get(
+        $gitResponse = wp_remote_get(
             'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/branches/'.$args['rep_branch'],
             ['headers' => $headers]
         );
-        return $response;
+        return $gitResponse;
     };
 
     $deleteFolderContents = function($folder) use (&$deleteFolderContents) {
@@ -78,13 +78,14 @@ add_action( 'rest_api_init', function () {
         // delete zip
         unlink( $zipFilePath );
 
-        return true;
- 
+        return [
+            "directory_updated" => true
+        ];
     };
 
     $route_args = [
         'methods'  => 'GET',
-        'callback' => function(\WP_REST_Request $request) use ($branch_infos, $override_dest) {
+        'callback' => function(\WP_REST_Request $request) use ($gitBranchInfos, $override_dest) {
 
             if ( FCGBF_DEV ) { // simulate server responce delay
                 nocache_headers();
@@ -120,19 +121,31 @@ add_action( 'rest_api_init', function () {
             }
 
             //return new \WP_REST_Response( $details, 200 );
-            //return new \WP_REST_Response( $branch_infos($details), 200 );
+            //return new \WP_REST_Response( $gitBranchInfos($details), 200 );
 
-            $response = $branch_infos($details);
-            if ( is_wp_error( $response ) ) { return $response; }
+            // git data
+            $gitResponse = $gitBranchInfos($details);
+            if ( is_wp_error( $gitResponse ) ) { return $gitResponse; }
 
-            if ( $request['action'] === 'install' ) { // ++extend
-                $response = $override_dest($details);
-                if ( is_wp_error( $response ) ) { return $response; }
+            $gitResponseBody = json_decode(stripslashes(wp_remote_retrieve_body( $gitResponse )));
+            $gitResponseBody->extendedLocally = [];
+
+            // git zip, override
+            if ( $request['action'] === 'install' ) {
+                $zipProcessed = $override_dest($details);
+                if ( is_wp_error( $zipProcessed ) ) { return $zipProcessed; }
+                $gitResponseBody->extended_locally = array_merge($gitResponseBody->extendedLocally, $zipProcessed, ["date" => time()]);
+
+                // update the meta
+                update_post_meta( $request['id'], FCGBF_PREF.'rep-current', $gitResponseBody );
+                delete_post_meta( $request['id'], FCGBF_PREF.'rep-new' );
+            }
+            if ( $request['action'] === 'check' ) {
+                $gitResponseBody->extended_locally = array_merge($gitResponseBody->extendedLocally, ["checked" => true], ["date" => time()]);
+                update_post_meta( $request['id'], FCGBF_PREF.'rep-new', $gitResponseBody );
             }
 
-            // update the meta
-
-            return new \WP_REST_Response( json_decode(stripslashes(wp_remote_retrieve_body( $response ))), wp_remote_retrieve_response_code( $response ) );
+            return new \WP_REST_Response( $gitResponseBody, wp_remote_retrieve_response_code( $gitResponse ) );
 
         },
         'permission_callback' => function() {

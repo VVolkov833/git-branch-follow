@@ -69,7 +69,7 @@ function rep_infos() {
 
         button( (object) [
             'name' => 'rep-install',
-            'title' => 'Install or update the repository',
+            'title' => 'Override the content of Destination',
             'value' => 'Install / Update',
             'className' => 'button',
         ]);
@@ -80,10 +80,10 @@ function rep_infos() {
     <input type="hidden" id="<?php echo esc_attr( FCGBF_PREF ) ?>rest-nonce" value="<?php echo esc_attr( wp_create_nonce( 'wp_rest' ) ) ?>">
 
     <div class="<?php echo FCGBF_PREF ?>infos">
-        <div class="<?php echo FCGBF_PREF ?>current"></div>
-        <div class="<?php echo FCGBF_PREF ?>checked"></div>
+        <div class="<?php echo FCGBF_PREF ?>current"><?php print_r( get_post_meta( $post->ID, FCGBF_PREF.'rep-current' )[0] ?? [] ) ?></div>
+        <div class="<?php echo FCGBF_PREF ?>checked"><?php print_r( get_post_meta( $post->ID, FCGBF_PREF.'rep-new' )[0] ?? [] ) ?></div>
     </div>
     <div class="<?php echo FCGBF_PREF ?>response"></div>
-    <?php
 
+    <?php
 }
