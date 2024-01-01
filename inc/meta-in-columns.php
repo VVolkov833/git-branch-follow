@@ -18,7 +18,7 @@ add_action('manage_'.FCGBF_SLUG.'_posts_custom_column', function($column, $post_
             break;
         case FCGBF_SLUG.'rep_new':
             $exists = !!(get_post_meta( $post_id, FCGBF_PREF.'rep-new' )[0] ?? '');
-            echo $exists ? '<span style="color:var(--fcgbf-update-available-color);font-weight:bold">YES</span>' : 'NO';
+            echo $exists ? '<span style="color:var(--fcgbf-update-available-color);font-weight:bold">YES</span>' : '';
             break;
     }
 }, 10, 2);
