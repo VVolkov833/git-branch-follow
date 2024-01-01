@@ -26,3 +26,17 @@
 .fcgbf-response {
     border: 1px dotted grey;
 }
+
+/* highlights */
+.fcgbf-highlight-date {
+    border: 1px solid var(--color);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-weight: bold;
+}
+.fcgbf-great {
+    --color: #22c55e;
+}
+.fcgbf-good {
+    --color: #facc15;
+}
