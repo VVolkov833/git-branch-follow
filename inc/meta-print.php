@@ -31,11 +31,11 @@ function format_data($heading, $data) {
     date_default_timezone_set($originalTimezone);
 
     $print = [
-        $done_label => $operation_date,
         "Commiter Date" => $committer->date,
-        "Commiter Name" => $committer->name,
         "Commiter Message" => $commit->message,
+        "Commiter Name" => $committer->name,
         "Branch" => $data->name,
+        $done_label => $operation_date,
     ];
 
     ?>
@@ -51,6 +51,9 @@ function format_data($heading, $data) {
 
 function rep_infos() {
     global $post;
+
+    $rep_current = get_post_meta( $post->ID, FCGBF_PREF.'rep-current' )[0] ?? [];
+    $rep_checked = get_post_meta( $post->ID, FCGBF_PREF.'rep-new' )[0] ?? [];
 
     ?>
     <div class="<?php echo FCGBF_PREF ?>fields">
@@ -102,11 +105,9 @@ function rep_infos() {
             'name' => 'rep-install',
             'title' => 'Override the content of Destination',
             'value' => 'Install / Update',
-            'className' => 'button',
+            'className' => 'button' . (empty($rep_checked) ? '' : ' '.FCGBF_PREF.'update-available'),
         ]);
 
-        $rep_current = get_post_meta( $post->ID, FCGBF_PREF.'rep-current' )[0] ?? [];
-        $rep_checked = get_post_meta( $post->ID, FCGBF_PREF.'rep-new' )[0] ?? [];
         ?>
     </div>
 
