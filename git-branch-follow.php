@@ -38,6 +38,7 @@ require FCGBF_DIR . 'inc/meta-in-columns.php';
 require FCGBF_DIR . 'inc/meta-front.php';
 require FCGBF_DIR . 'inc/meta-save.php';
 require FCGBF_DIR . 'inc/api-fetch.php';
+require FCGBF_DIR . 'inc/install.php';
 
 
 // ++install / uninstall hooks with schedule

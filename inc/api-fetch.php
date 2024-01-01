@@ -94,7 +94,7 @@ add_action( 'rest_api_init', function () {
 
             $wp_query_args = [
                 'post_type' => FCGBF_SLUG,
-                'post_status' => ['publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit'],
+                'post_status' => FCGBF_PREF.'active',//['publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit'],
                 'p' => $request['id'],
             ];
 

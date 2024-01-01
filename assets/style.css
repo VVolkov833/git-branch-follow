@@ -2,10 +2,10 @@
     --fcgbf-update-available-color: #16a34a;
 }
 
+/* meta decor */
 #fcgbf-rep-infos .inside > div {
     margin: 30px 0;
 }
-
 .fcgbf-fields {
     display: flex;
     align-items: center;
@@ -54,4 +54,10 @@ button.fcgbf-update-available {
 @keyframes fcgbfloaderanimation {
     0% { max-width: 1ch }
     100% { max-width: 7ch }
-  }
+}
+
+/* limit post statuses */
+/* editor screen */
+#minor-publishing {
+    display: none;
+}

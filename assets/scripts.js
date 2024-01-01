@@ -1,6 +1,7 @@
 (function() {
     const {SLUG, PREF, URL} = fcgbf_vars;
-    const el = a => document.querySelector(a);
+    const el = a => document.querySelector(a) || {'innerHTML': '', 'value': ''};
+    const els = a => document.querySelectorAll(a);
     const val = a => el(a)?.value;
 
     const formatData = (heading, data) => {
@@ -40,7 +41,7 @@
 
             // loader
             const loader_add = field => field.innerHTML = `<span class="${PREF}loader"></span>`;
-            //const loader_remove = () => document.querySelectorAll(`.${PREF}loader`).forEach(el => el.remove());
+            //const loader_remove = () => els(`.${PREF}loader`).forEach(el => el.remove());
             loader_add(response_field);
 
             // process
@@ -91,7 +92,16 @@
         clearInterval(a);
         a = null;
 
-        el('#fcgbf-rep-check').addEventListener('click', e => fetch_data('check')());
-        el('#fcgbf-rep-install').addEventListener('click', e => fetch_data('install')());
+        // fetch events
+        el('#fcgbf-rep-check')?.addEventListener('click', e => fetch_data('check')());
+        el('#fcgbf-rep-install')?.addEventListener('click', e => fetch_data('install')());
+
+        // limit status options
+        // editor screen
+
+        //el( `#minor-publishing` ).remove(); // doesn't submit without it
+        el( `#publish` ).setAttribute( 'name', 'save' );
+        el( `#publish` ).value = `Save`;
+
     }, 300);
 })();
