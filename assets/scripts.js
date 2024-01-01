@@ -36,6 +36,7 @@
             const current_field = el(`.${PREF}current`);
             const checked_field = el(`.${PREF}checked`);
             const response_field = el(`.${PREF}response`);
+            const highlight_element = el(`#${PREF}rep-install`);
 
             try {
                 let getResponse = async () => {
@@ -53,6 +54,9 @@
                     const jsonData = await response.json();
                     if ( jsonData.extended_locally?.checked === true ) {
                         checked_field.innerHTML = formatData('Just Checked', jsonData);
+                        if ( jsonData.extended_locally?.has_changes === true ) {
+                            highlight_element.classList.add(`${PREF}update-available`);
+                        }
                     } else if ( jsonData.extended_locally?.installed === true ) {
                         checked_field.innerHTML = '';
                         current_field.innerHTML = formatData('Just Updated', jsonData);

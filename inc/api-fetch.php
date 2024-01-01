@@ -114,9 +114,8 @@ add_action( 'rest_api_init', function () {
                 break;
             }
 
-            if ( preg_match( '/^https:\/\/github\.com\/([^\/]+)\/([^\/]+)$/', $details['rep_url'], $matches) ) {
-                list( , $details['rep_author'], $details['rep_name'] ) = $matches;
-            } else {
+            list( $details['rep_author'], $details['rep_name'] ) = gitUrlSplit( $details['rep_url'] );
+            if ( !$details['rep_author'] || !$details['rep_name'] ) {
                 return new \WP_Error( 'wrong_format', 'Wrong Repository Link format', ['status' => 422] );
             }
 
@@ -134,7 +133,7 @@ add_action( 'rest_api_init', function () {
             if ( $request['action'] === 'install' ) {
                 $zipProcessed = $override_dest($details);
                 if ( is_wp_error( $zipProcessed ) ) { return $zipProcessed; }
-                $gitResponseBody->extended_locally = (object) array_merge($gitResponseBody->extended_locally, $zipProcessed, ["date" => time()]);
+                $gitResponseBody->extended_locally = (object) array_merge((array) $gitResponseBody->extended_locally, $zipProcessed, ["date" => time()]);
 
                 // update the meta
                 update_post_meta( $request['id'], FCGBF_PREF.'rep-current', $gitResponseBody );
@@ -143,11 +142,12 @@ add_action( 'rest_api_init', function () {
 
             // update the meta after check with changes
             if ( $request['action'] === 'check' ) {
-                $gitResponseBody->extended_locally = (object) array_merge($gitResponseBody->extended_locally, ["checked" => true], ["date" => time()]);
+                $gitResponseBody->extended_locally = (object) array_merge((array)  $gitResponseBody->extended_locally, ["checked" => true], ["date" => time()]);
                 //delete_post_meta( $request['id'], FCGBF_PREF.'rep-new' );
                 $repCurrentBody = get_post_meta( $request['id'], FCGBF_PREF.'rep-current' )[0] ?? [];
                 if (empty($repCurrentBody) || $repCurrentBody->commit->sha !== $gitResponseBody->commit->sha) {
                     update_post_meta( $request['id'], FCGBF_PREF.'rep-new', $gitResponseBody );
+                    $gitResponseBody->extended_locally = (object) array_merge((array) $gitResponseBody->extended_locally, ["has_changes" => true]);
                 }
             }
 
