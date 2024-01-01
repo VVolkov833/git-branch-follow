@@ -32,3 +32,20 @@ button.fcgbf-update-available {
     border-color: #16a34a!important;
     color: #16a34a!important;
 }
+
+/* loading */
+.fcgbf-loader {
+    display: inline-block;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: monospace;
+    animation: fcgbfloaderanimation 1.5s linear infinite;
+}
+.fcgbf-loader::after {
+    content: '......';
+}
+@keyframes fcgbfloaderanimation {
+    0% { max-width: 1ch }
+    100% { max-width: 7ch }
+  }
