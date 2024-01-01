@@ -37,6 +37,7 @@
             const checked_field = el(`.${PREF}checked`);
             const response_field = el(`.${PREF}response`);
             const highlight_element = el(`#${PREF}rep-install`);
+
             // loader
             const loader_add = field => field.innerHTML = `<span class="${PREF}loader"></span>`;
             //const loader_remove = () => document.querySelectorAll(`.${PREF}loader`).forEach(el => el.remove());

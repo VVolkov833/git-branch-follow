@@ -69,3 +69,6 @@ add_filter( 'plugin_action_links_'.FCGBF_BSN, function($links) {
     array_unshift( $links, $settings_link );
     return $links;
 });
+
+
+// the main list view change

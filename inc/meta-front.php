@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'admin_enqueue_scripts', function($hook) {
 
-    if ( !in_array( $hook, ['post.php', 'post-new.php'] ) ) { return; }
+    if ( !in_array( $hook, ['post.php', 'post-new.php', 'edit.php'] ) ) { return; }
 
     $screen = get_current_screen();
     if ( !isset( $screen ) || !is_object( $screen ) || $screen->post_type !== FCGBF_SLUG ) { return; }
