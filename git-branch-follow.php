@@ -31,15 +31,15 @@ define( 'FCGBF_BRANCH', 'main' );
 define( 'FCGBF_ENDPOINT', FCGBF_SLUG.'/v1' );
 
 
-require FCGBF_DIR . 'inc/functions.php';
-require FCGBF_DIR . 'inc/post-type.php';
-require FCGBF_DIR . 'inc/fields.php';
-require FCGBF_DIR . 'inc/meta-print.php';
-require FCGBF_DIR . 'inc/meta-in-columns.php';
-require FCGBF_DIR . 'inc/meta-front.php';
-require FCGBF_DIR . 'inc/meta-save.php';
-require FCGBF_DIR . 'inc/api-fetch.php';
-require FCGBF_DIR . 'inc/install.php';
+require_once FCGBF_DIR . 'inc/functions.php';
+require_once FCGBF_DIR . 'inc/post-type.php';
+require_once FCGBF_DIR . 'inc/fields.php';
+require_once FCGBF_DIR . 'inc/meta-print.php';
+require_once FCGBF_DIR . 'inc/meta-in-columns.php';
+require_once FCGBF_DIR . 'inc/meta-front.php';
+require_once FCGBF_DIR . 'inc/meta-save.php';
+require_once FCGBF_DIR . 'inc/api-fetch.php';
+require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
