@@ -128,21 +128,27 @@ add_action( 'rest_api_init', function () {
             if ( is_wp_error( $gitResponse ) ) { return $gitResponse; }
 
             $gitResponseBody = json_decode(stripslashes(wp_remote_retrieve_body( $gitResponse )));
-            $gitResponseBody->extendedLocally = [];
+            $gitResponseBody->extended_locally = [];
 
             // git zip, override
             if ( $request['action'] === 'install' ) {
                 $zipProcessed = $override_dest($details);
                 if ( is_wp_error( $zipProcessed ) ) { return $zipProcessed; }
-                $gitResponseBody->extended_locally = (object) array_merge($gitResponseBody->extendedLocally, $zipProcessed, ["date" => time()]);
+                $gitResponseBody->extended_locally = (object) array_merge($gitResponseBody->extended_locally, $zipProcessed, ["date" => time()]);
 
                 // update the meta
                 update_post_meta( $request['id'], FCGBF_PREF.'rep-current', $gitResponseBody );
                 delete_post_meta( $request['id'], FCGBF_PREF.'rep-new' );
             }
+
+            // update the meta after check with changes
             if ( $request['action'] === 'check' ) {
-                $gitResponseBody->extended_locally = (object) array_merge($gitResponseBody->extendedLocally, ["checked" => true], ["date" => time()]);
-                update_post_meta( $request['id'], FCGBF_PREF.'rep-new', $gitResponseBody );
+                $gitResponseBody->extended_locally = (object) array_merge($gitResponseBody->extended_locally, ["checked" => true], ["date" => time()]);
+                //delete_post_meta( $request['id'], FCGBF_PREF.'rep-new' );
+                $repCurrentBody = get_post_meta( $request['id'], FCGBF_PREF.'rep-current' )[0] ?? [];
+                if (empty($repCurrentBody) || $repCurrentBody->commit->sha !== $gitResponseBody->commit->sha) {
+                    update_post_meta( $request['id'], FCGBF_PREF.'rep-new', $gitResponseBody );
+                }
             }
 
             $gitResponseBody->extended_locally = (object) $gitResponseBody->extended_locally;

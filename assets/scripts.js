@@ -52,20 +52,20 @@
                     const response = await getResponse();
                     const jsonData = await response.json();
                     if ( jsonData.extended_locally?.checked === true ) {
-                        checked_field?.innerHTML = formatData('Just Checked', jsonData);
+                        checked_field.innerHTML = formatData('Just Checked', jsonData);
                     } else if ( jsonData.extended_locally?.installed === true ) {
-                        checked_field?.innerHTML = '';
-                        current_field?.innerHTML = formatData('Just Updated', jsonData);
+                        checked_field.innerHTML = '';
+                        current_field.innerHTML = formatData('Just Updated', jsonData);
                     }
-                    response_field?.innerHTML = `<h3>Full responce:</h3><pre>${JSON.stringify(jsonData, null, 2)}</pre>`;
+                    response_field.innerHTML = `<h3>Full responce:</h3><pre>${JSON.stringify(jsonData, null, 2)}</pre>`;
                 } catch (error) {
                     const response = await getResponse();
                     const textData = await response.text();
-                    response_field?.innerHTML = textData ? `<h3>Error response:</h3><pre>${textData}</pre>` : `<h3>The response is empty</h3>`;
+                    response_field.innerHTML = textData ? `<h3>Error response:</h3><pre>${textData}</pre>` : `<h3>The response is empty</h3>`;
                 }
 
             } catch (error) {
-                response_field?.innerText = `<h3>Fetch error:</h3><pre>${error.message}</pre>`;
+                response_field.innerText = `<h3>Fetch error:</h3><pre>${error.message}</pre>`;
             }
         };
     };

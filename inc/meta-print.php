@@ -32,7 +32,7 @@ function format_data($heading, $data) {
 
     $print = [
         $done_label => $operation_date,
-        "Commiter Date" => $committer->date_highlight ?? $committer->date,
+        "Commiter Date" => $committer->date,
         "Commiter Name" => $committer->name,
         "Commiter Message" => $commit->message,
         "Branch" => $data->name,
@@ -107,12 +107,6 @@ function rep_infos() {
 
         $rep_current = get_post_meta( $post->ID, FCGBF_PREF.'rep-current' )[0] ?? [];
         $rep_checked = get_post_meta( $post->ID, FCGBF_PREF.'rep-new' )[0] ?? [];
-
-        $highlights = [ -1 => 'great', 0 => '', 1 => 'good']; // ++highlight all differences in list
-        $compared = compareDates($rep_current->commit->commit->committer->date, $rep_checked->commit->commit->committer->date );
-        $rep_current->commit->commit->committer->date_highlight = '<span class="'.FCGBF_PREF.'highlight-date '.FCGBF_PREF.$highlights[$compared].'">'.$rep_checked->commit->commit->committer->date.'</span>';
-        $rep_checked->commit->commit->committer->date_highlight = '<span class="'.FCGBF_PREF.'highlight-date '.FCGBF_PREF.$highlights[$compared].'">'.$rep_checked->commit->commit->committer->date.'</span>';
-        $rep_checked->commit->commit->committer->date_highlight .= $compared ? '' : ' No changes';
         ?>
     </div>
 
