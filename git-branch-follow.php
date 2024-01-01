@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
 
 define( 'FCGBF_DEV', true );
 define( 'FCGBF_VER', get_file_data( __FILE__, [ 'ver' => 'Version' ] )[ 'ver' ] . ( FCGBF_DEV ? time() : '' ) );
+define( 'FCGBF_REGISTER', __FILE__ );
 
 define( 'FCGBF_SLUG', 'fcgbf' );
 define( 'FCGBF_PREF', FCGBF_SLUG.'-' );
