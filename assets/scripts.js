@@ -1,7 +1,7 @@
 (function() {
     const {SLUG, PREF, URL} = fcgbf_vars;
-    const el = a => document.querySelector(a) || {'innerHTML': '', 'value': ''};
-    const els = a => document.querySelectorAll(a);
+    const el = a => document.querySelector(a) || {'innerHTML': '', 'value': '', 'addEventListener': ()=>{}, 'setAttribute': ()=>{}};
+    //const els = a => document.querySelectorAll(a);
     const val = a => el(a)?.value;
 
     const formatData = (heading, data) => {
@@ -93,8 +93,8 @@
         a = null;
 
         // fetch events
-        el('#fcgbf-rep-check')?.addEventListener('click', e => fetch_data('check')());
-        el('#fcgbf-rep-install')?.addEventListener('click', e => fetch_data('install')());
+        el('#fcgbf-rep-check').addEventListener('click', e => fetch_data('check')());
+        el('#fcgbf-rep-install').addEventListener('click', e => fetch_data('install')());
 
         // limit status options
         // editor screen

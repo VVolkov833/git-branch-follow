@@ -35,7 +35,7 @@ require_once FCGBF_DIR . 'inc/functions.php';
 require_once FCGBF_DIR . 'inc/post-type.php';
 require_once FCGBF_DIR . 'inc/fields.php';
 require_once FCGBF_DIR . 'inc/meta-print.php';
-require_once FCGBF_DIR . 'inc/meta-in-columns.php';
+require_once FCGBF_DIR . 'inc/meta-columns.php';
 require_once FCGBF_DIR . 'inc/meta-front.php';
 require_once FCGBF_DIR . 'inc/meta-save.php';
 require_once FCGBF_DIR . 'inc/api-fetch.php';

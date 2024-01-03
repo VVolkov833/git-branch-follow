@@ -9,11 +9,11 @@ function gitUrlSplit($url) {
 }
 
 function gitBranchInfos($args) {
-    $headers = [
-        'Authorization' => 'Bearer '.$args['rep_api_key'],
+    $headers = array_filter([
+        'Authorization' => $args['rep_api_key'] ? 'Bearer '.$args['rep_api_key'] : null,
         'Accept' => 'application/vnd.github+json',
         'X-GitHub-Api-Version' => '2022-11-28',
-    ];
+    ]);
     $gitResponse = wp_remote_get(
         'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/branches/'.$args['rep_branch'],
         ['headers' => $headers]
@@ -36,7 +36,7 @@ function deleteFolderContents($folder) {
 function overrideDestination($args) {
     $zipFileUrl = 'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/zipball/'.$args['rep_branch'];
     $downloadHeaders = array(
-        'Authorization' => 'Bearer '.$args['rep_api_key'],
+        'Authorization' => $args['rep_api_key'] ? 'Bearer '.$args['rep_api_key'] : null,
         'X-GitHub-Api-Version' => '2022-11-28',
     );
 
@@ -119,9 +119,6 @@ function processGitRequest($request) { //[id, action]
     if ( !$details['rep_author'] || !$details['rep_name'] ) {
         return new \WP_Error( 'wrong_format', 'Wrong Repository Link format', ['status' => 422] );
     }
-
-    //return new \WP_REST_Response( $details, 200 );
-    //return new \WP_REST_Response( gitBranchInfos($details), 200 );
 
     // git data
     $gitResponse = gitBranchInfos($details);

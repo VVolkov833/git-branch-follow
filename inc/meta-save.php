@@ -14,7 +14,7 @@ add_action( 'save_post', function( $postID ) {
     if ( $post->post_type !== FCGBF_SLUG ) { return; }
     if ( $post->post_type === 'revision' ) { return; }
 
-    $fields = [ 'rep-url', 'rep-api-key', 'rep-branch', 'rep-dest' ];
+    $fields = [ 'rep-url', 'rep-api-key', 'rep-branch', 'rep-dest', 'rep-auto-updates' ];
 
     foreach ( $fields as $f ) {
         $f = FCGBF_PREF.$f;
@@ -56,8 +56,10 @@ function sanitize_meta( $value, $field, $postID ) {
             return $value;
         break;
         case ( 'rep-dest' ):
-            return $value;
-            //return in_array($value, ['plugins', 'themes']) ? $value : 'plugins';
+            return in_array($value, ['plugins', 'themes']) ? $value : 'plugins';
+        break;
+        case ( 'rep-auto-updates' ):
+            return in_array($value, ['0', '1', '2']) ? $value : '0';
         break;
     }
 

@@ -45,7 +45,7 @@ register_activation_hook(FCGBF_REGISTER, function() {
     ));
     $wpdb->query( $wpdb->prepare(
         "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES (%d, %s, %s)",
-        $post_id, FCGBF_PREF.'rep-autoupdate', '1'
+        $post_id, FCGBF_PREF.'rep-auto-updates', '1'
     ));
 });
 

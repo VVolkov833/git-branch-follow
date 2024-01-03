@@ -61,3 +61,8 @@ button.fcgbf-update-available {
 #minor-publishing {
     display: none;
 }
+
+/* auto-update */
+.fcgbf-auto-update select {
+    width: 100%;
+}

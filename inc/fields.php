@@ -48,7 +48,7 @@ function select($a) {
         <?php foreach ( $a->options as $k => $v ) { ?>
             <option
                 value="<?php echo esc_attr( $k ) ?>"
-                <?php echo isset( $a->value ) && $a->value === $k ? 'selected' : '' ?>
+                <?php echo isset( $a->value ) && $a->value === ''.$k ? 'selected' : '' ?>
             ><?php echo esc_html( $v ) ?></option>
         <?php } ?>
     </select>

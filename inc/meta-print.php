@@ -15,39 +15,17 @@ add_action( 'add_meta_boxes', function() {
         'low'
     );
 
+    add_meta_box(
+        FCGBF_PREF.'auto-updates',
+        'Auto Updates',
+        'FC\GitBranchFollow\auto_updates',
+        FCGBF_SLUG,
+        'side',
+        'low'
+    );
+
 });
 
-function format_data($heading, $data) {
-    if ( empty($data) ) { return ''; }
-
-    $commit = $data->commit->commit;
-    $committer = $commit->committer;
-
-    $done_label = isset($data->extended_locally->checked) ? 'Last Checked' : 'Last Updated';
-    
-    $originalTimezone = date_default_timezone_get();
-    date_default_timezone_set('UTC');
-    $operation_date = date( 'Y-m-d\TH:i:s\Z', $data->extended_locally->date );
-    date_default_timezone_set($originalTimezone);
-
-    $print = [
-        "Commiter Date" => $committer->date,
-        "Commiter Message" => $commit->message,
-        "Commiter Name" => $committer->name,
-        "Branch" => $data->name,
-        $done_label => $operation_date,
-    ];
-
-    ?>
-    <h3><?php echo esc_html($heading) ?></h3>
-    <dl>
-    <?php foreach ($print as $k => $v) { ?>
-        <dt><?php echo esc_html($k) ?></dt>
-        <dd><?php echo $v ?></dd>
-    <?php } ?>
-    </dl>
-    <?php
-}
 
 function rep_infos() {
     global $post;
@@ -120,5 +98,56 @@ function rep_infos() {
     </div>
     <div class="<?php echo FCGBF_PREF ?>response"></div>
 
+    <?php
+}
+
+function auto_updates() {
+    global $post;
+
+    ?>
+    <div class="<?php echo FCGBF_PREF ?>auto-update">
+    <?php
+        select( (object) [
+            'name' => 'rep-auto-updates',
+            'options' => ['0' => 'Off', '1' => 'Enabled', '2' => 'Force'], // ++ move all options to one place
+            'value' => get_post_meta( $post->ID, FCGBF_PREF.'rep-auto-updates' )[0] ?? '',
+        ]);
+    ?>
+    <p>The <em>Force</em> option will run the process every scheduled time even if there are no new commits</p>
+    </div>
+    <?php
+
+}
+
+
+function format_data($heading, $data) {
+    if ( empty($data) ) { return ''; }
+
+    $commit = $data->commit->commit;
+    $committer = $commit->committer;
+
+    $done_label = isset($data->extended_locally->checked) ? 'Last Checked' : 'Last Updated';
+    
+    $originalTimezone = date_default_timezone_get();
+    date_default_timezone_set('UTC');
+    $operation_date = date( 'Y-m-d\TH:i:s\Z', $data->extended_locally->date );
+    date_default_timezone_set($originalTimezone);
+
+    $print = [
+        "Commiter Date" => $committer->date,
+        "Commiter Message" => $commit->message,
+        "Commiter Name" => $committer->name,
+        "Branch" => $data->name,
+        $done_label => $operation_date,
+    ];
+
+    ?>
+    <h3><?php echo esc_html($heading) ?></h3>
+    <dl>
+    <?php foreach ($print as $k => $v) { ?>
+        <dt><?php echo esc_html($k) ?></dt>
+        <dd><?php echo $v ?></dd>
+    <?php } ?>
+    </dl>
     <?php
 }
