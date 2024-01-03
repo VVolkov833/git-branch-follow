@@ -24,6 +24,7 @@ function button($a) {
         id="<?php echo esc_attr( FCGBF_PREF.$a->name ) ?>"
         title="<?php echo isset( $a->title ) ? esc_attr( $a->title ) : '' ?>"
         class="<?php echo isset( $a->className ) ? esc_attr( $a->className ) : '' ?>"
+        <?php echo isset( $a->disabled ) ? 'disabled' : ''; ?>
     >
         <?php if (isset($a->imageSrc)) { ?>
             <img src="<?php echo esc_url($a->imageSrc); ?>" alt="<?php echo esc_attr($a->imageAlt); ?>">

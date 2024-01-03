@@ -28,7 +28,7 @@ add_action( 'add_meta_boxes', function() {
 
 
 function rep_infos() {
-    global $post;
+    global $post, $pagenow;
 
     $rep_current = get_post_meta( $post->ID, FCGBF_PREF.'rep-current' )[0] ?? [];
     $rep_checked = get_post_meta( $post->ID, FCGBF_PREF.'rep-new' )[0] ?? [];
@@ -63,6 +63,7 @@ function rep_infos() {
             'title' => 'Check for existence / updates',
             'value' => 'Check',
             'className' => 'button',
+            'disabled' => $pagenow === 'post-new.php' ? true : null,
         ]);
 
         ?>
@@ -84,6 +85,7 @@ function rep_infos() {
             'title' => 'Override the content of Destination',
             'value' => 'Install / Update',
             'className' => 'button' . (empty($rep_checked) ? '' : ' '.FCGBF_PREF.'update-available'),
+            'disabled' => $pagenow === 'post-new.php' ? true : null,
         ]);
 
         ?>
