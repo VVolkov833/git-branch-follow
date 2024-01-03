@@ -104,15 +104,28 @@ function rep_infos() {
 function auto_updates() {
     global $post;
 
+    $has_updates = !empty( get_post_meta( $post->ID, FCGBF_PREF.'rep-new' )[0] ?? [] );
+    $trigger_next_time = wp_next_scheduled( FCGBF_SLUG.'_auto_updates', [$post->ID] );
+    $auto_updates_option = get_post_meta( $post->ID, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0';
+
     ?>
     <div class="<?php echo FCGBF_PREF ?>auto-update">
     <?php
         select( (object) [
             'name' => 'rep-auto-updates',
             'options' => ['0' => 'Off', '1' => 'Enabled', '2' => 'Force'], // ++ move all options to one place
-            'value' => get_post_meta( $post->ID, FCGBF_PREF.'rep-auto-updates' )[0] ?? '',
+            'value' => $auto_updates_option,
         ]);
     ?>
+
+    <?php if ( $trigger_next_time !== false && ($has_updates || $auto_updates_option === '2') ) { ?>
+        <p>The next update is scheduled for <?php echo date( 'H:i', $trigger_next_time ) ?></p>
+    <?php } ?>
+
+    <?php if ( FCGBF_DEV && $check_next_time = wp_next_scheduled( FCGBF_SLUG.'_auto_checks' ) ){ ?>
+        <p>The check is scheduled for <?php echo date( 'H:i', $check_next_time ) ?> <?php echo date( 'H:i' ) ?></p>
+    <?php } ?>
+
     <p>The <em>Force</em> option will run the process every scheduled time even if there are no new commits</p>
     </div>
     <?php

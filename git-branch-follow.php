@@ -40,6 +40,7 @@ require_once FCGBF_DIR . 'inc/meta-front.php';
 require_once FCGBF_DIR . 'inc/meta-save.php';
 require_once FCGBF_DIR . 'inc/api-fetch.php';
 require_once FCGBF_DIR . 'inc/install.php';
+require_once FCGBF_DIR . 'inc/auto-updates.php';
 
 
 /* future improvements

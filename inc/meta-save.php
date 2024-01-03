@@ -25,6 +25,9 @@ add_action( 'save_post', function( $postID ) {
         update_post_meta( $postID, $f, $new_value );
     }
 
+    // schedule the update event
+    schedule_auto_update($postID, $_POST[FCGBF_PREF.'rep-auto-updates']);
+
 });
 
 // update the title

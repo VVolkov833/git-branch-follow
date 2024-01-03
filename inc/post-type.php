@@ -6,8 +6,8 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'init', function() {
     $shorter = [
-        'name' => 'Repository',
-        'plural' => 'Repositories',
+        'name' => 'Git Repository',
+        'plural' => 'Git Repositories',
         'public' => false,
         'description' => 'Add github repositories of your plugins or themes to follow the updates',
     ];
