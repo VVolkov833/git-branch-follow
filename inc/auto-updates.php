@@ -4,30 +4,32 @@ namespace FC\GitBranchFollow;
 defined( 'ABSPATH' ) || exit;
 
 
-// schedule the autoupdates
+// plugin activate / deactevate adding schedules
+register_activation_hook( FCGBF_REGISTER, function() {
+    // check
+    wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_checks' );
+    // ++ install
+});
+register_deactivation_hook( FCGBF_REGISTER, function() {
+    // check
+    wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_checks' );
+    // ++ install
+});
+
+
+// trash / untrash
+
+
+// shedules hooks
+
+// update
 add_action( FCGBF_SLUG.'_auto_updates', 'FC\GitBranchFollow\auto_updates_hook', 10, 1 );
 function auto_updates_hook($postID) {
     //error_log('auto_updates_hook '.$postID.' install');
     processGitRequest(['id' => $postID, 'action' => 'install']);
 }
-function schedule_auto_update($postID, $type) {
-    if ( in_array( $type, ['1', '2'] ) ) {
-        wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_updates', [$postID] );
-        //error_log('schedule_auto_update '.$postID.' '.$type);
-        return;
-    }
-    wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
-}
 
-
-// schedule the check
-register_activation_hook( FCGBF_REGISTER, function() {
-    wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_checks' );
-});
-register_deactivation_hook( FCGBF_REGISTER, function() {
-    wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_checks' );
-});
-
+// check
 add_action( FCGBF_SLUG.'_auto_checks', 'FC\GitBranchFollow\auto_checks_hook', 10, 0 );
 function auto_checks_hook() {    
     global $wpdb;
@@ -40,6 +42,22 @@ function auto_checks_hook() {
         processGitRequest(['id' => $post_id, 'action' => 'check']);
     }
 }
+
+
+// functions
+
+function schedule_auto_update($postID, $type) {
+    if ( in_array( $type, ['1', '2'] ) ) {
+        wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_updates', [$postID] );
+        //error_log('schedule_auto_update '.$postID.' '.$type);
+        return;
+    }
+    wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
+}
+function clear_schedule_auto_update($postID) {
+    schedule_auto_update($postID, '0');
+}
+
 
 function get_schedule_start() {
     if ( !FCGBF_DEV ) { return time(); }

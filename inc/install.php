@@ -7,7 +7,8 @@ defined( 'ABSPATH' ) || exit;
 register_activation_hook(FCGBF_REGISTER, function() {
     global $wpdb;
 
-    // add the entry to update itself
+    // add the first entry to update itself
+
     // check if the record about self already exists
     $existing_meta_id = $wpdb->get_var( $wpdb->prepare(
         "SELECT `post_id` FROM $wpdb->postmeta WHERE `meta_key` = %s",
@@ -48,12 +49,14 @@ register_activation_hook(FCGBF_REGISTER, function() {
         "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES (%d, %s, %s)",
         $post_id, FCGBF_PREF.'rep-auto-updates', '1'
     ));
+
+    // schedule the auto-updates for the entry
     if ( function_exists( __NAMESPACE__ . '\schedule_auto_update' ) ) {
         schedule_auto_update($post_id, '1');
     }
 });
 
-
+/*
 register_deactivation_hook(FCGBF_REGISTER, function() {
     global $wpdb;
 
@@ -73,5 +76,6 @@ register_deactivation_hook(FCGBF_REGISTER, function() {
         $existing_meta_id
     ));
 });
+//*/
 
 // some parts are in ./auto-updates.php
