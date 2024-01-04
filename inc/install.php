@@ -52,7 +52,7 @@ register_activation_hook(FCGBF_REGISTER, function() {
 
     // schedule the auto-updates for the entry
     if ( function_exists( __NAMESPACE__ . '\schedule_auto_update' ) ) {
-        schedule_auto_update($post_id, '1');
+        schedule_auto_update( $post_id, '1' );
     }
 });
 

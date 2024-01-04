@@ -16,9 +16,15 @@ register_deactivation_hook( FCGBF_REGISTER, function() {
     // ++ install
 });
 
-
 // trash / untrash
-
+add_action( 'trashed_post', function($postID) {
+    wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
+});
+add_action( 'untrashed_post', function($postID) {
+    if ( ($post_type = get_post_type( $postID )) !==  FCGBF_SLUG ) { return; }
+    $auto_updates_option = get_post_meta( $postID, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0';
+    schedule_auto_update($postID, $auto_updates_option);
+} );
 
 // shedules hooks
 
@@ -53,9 +59,6 @@ function schedule_auto_update($postID, $type) {
         return;
     }
     wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
-}
-function clear_schedule_auto_update($postID) {
-    schedule_auto_update($postID, '0');
 }
 
 
