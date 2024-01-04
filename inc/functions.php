@@ -73,7 +73,7 @@ function overrideDestination($args) {
 
     // rename $destDir to $destDir.'_delete'
     $destDir = WP_CONTENT_DIR . '/' . $args['rep_dest'] . '/' . $args['rep_name'];
-    $deletedDir = $destDir . '_delete';
+    $deletedDir = WP_CONTENT_DIR . '/' . $args['rep_dest'] . '/.' . $args['rep_name'] . '_delete';
     rename($destDir, $deletedDir);
 
     // Check if $unZipDir contains only one folder
