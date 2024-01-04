@@ -13,11 +13,11 @@
         const doneLabel = data.extended_locally?.checked ? 'Last Checked' : 'Last Updated';
     
         const print = {
-            [doneLabel]: new Date(data.extended_locally.date*1000).toISOString().split('.')[0]+'Z',
             "Commiter Date": committer.date,
-            "Commiter Name": committer.name,
             "Commiter Message": commit.message,
+            "Commiter Name": committer.name,
             "Branch": data.name,
+            [doneLabel]: new Date(data.extended_locally.date*1000).toISOString().split('.')[0]+'Z',
         };
     
         let result = `<h3>${heading}</h3><dl>`;
