@@ -53,8 +53,6 @@ function overrideDestination($args) {
     }
 
     // unzip to temporary directory
-    $destDir = WP_CONTENT_DIR . '/' . $args['rep_dest'] . '/' . $args['rep_name'];
-    $tmpDestDir = WP_CONTENT_DIR . '/' . $args['rep_dest'] . '/.' . $args['rep_name'] . '_tmp';
     if (!class_exists('ZipArchive')) {
         return new \WP_Error('zip_cant_be_proceeded', 'ZipArchive library is not installed', ['status' => 418]);
     }
@@ -62,36 +60,36 @@ function overrideDestination($args) {
     if ($zip->open($zipFilePath) !== true) {
         return new \WP_Error('zip_cant_be_opened', 'Zip archive file seem to be broken', ['status' => 418]);
     }
-
-    if (!file_exists($tmpDestDir)) {
-        if (!mkdir($tmpDestDir, 0755, true)) {
-            return new \WP_Error('couldnt_create_directory', 'Could not create the temporary destination directory', ['status' => 418]);
+    $unZipDir = WP_CONTENT_DIR . '/upgrade/' . $args['rep_name'] . '_tmp';
+    if (!file_exists($unZipDir)) {
+        if (!mkdir($unZipDir, 0755, true)) {
+            return new \WP_Error('couldnt_create_directory', 'Could not create the temporary unzip directory', ['status' => 418]);
         }
     }
-
-    for ($i = 0; $i < $zip->numFiles; $i++) {
-        $filename = $zip->getNameIndex($i);
-        $fileInfo = pathinfo($filename);
-        $targetPath = $tmpDestDir . '/' . $fileInfo['basename'];
-        copy("zip://$zipFilePath#$filename", $targetPath);
+    if ($zip->extractTo($unZipDir) !== true) {
+        return new \WP_Error('extraction_failed', 'Failed to extract the zip archive', ['status' => 418]);
     }
-
     $zip->close();
 
-    // rename original directory to have a "_delete" postfix
-    if (!rename($destDir, $destDir.'_delete')) {
-        return new \WP_Error('couldnt_rename_directory', 'Could not rename the original directory', ['status' => 418]);
+    // rename $destDir to $destDir.'_delete'
+    $destDir = WP_CONTENT_DIR . '/' . $args['rep_dest'] . '/' . $args['rep_name'];
+    $deletedDir = $destDir . '_delete';
+    rename($destDir, $deletedDir);
+
+    // Check if $unZipDir contains only one folder
+    $contents = glob($unZipDir . '/*'); //scandir
+    if (count($contents) === 1 && is_dir($contents[0])) {
+        // If there's only one directory, move it to $destDir
+        rename($contents[0], $destDir);
+    } else {
+        // If there's more than one directory, move the entire $unZipDir to $destDir
+        rename($unZipDir, $destDir);
     }
 
-    // rename temporary directory to the original name
-    if (!rename($tmpDestDir, $destDir)) {
-        return new \WP_Error('couldnt_rename_tmp_directory', 'Could not rename the temporary directory', ['status' => 418]);
-    }
-
-    // delete the directory with the "_delete" postfix
-    deleteFolder($destDir.'_delete');
-    // delete zip
+    // Delete unnecessary folders and files
     unlink($zipFilePath);
+    deleteFolder($deletedDir);
+    deleteFolder($unZipDir);
 
     return [
         "installed" => true
