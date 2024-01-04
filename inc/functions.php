@@ -21,65 +21,77 @@ function gitBranchInfos($args) {
     return $gitResponse;
 }
 
-function deleteFolderContents($folder) {
-    if (@is_dir($folder) && $dh = @opendir($folder)) {
-        while (($file = readdir($dh)) !== false) {
-            if ($file != '.' && $file != '..') {
-                $path = $folder . '/' . $file;
-                is_dir($path) ? deleteFolderContents($path) && @rmdir($path) : @unlink($path);
-            }
+function deleteFolder($folderPath) {
+    if (!is_dir($folderPath)) { return false; }
+    $files = array_diff( scandir($folderPath), ['.', '..'] );
+    foreach ($files as $file) {
+        $filePath = $folderPath . '/' . $file;
+        if (is_dir($filePath)) {
+            deleteFolder($filePath);
+        } else {
+            unlink($filePath);
         }
-        closedir($dh);
     }
+    return rmdir($folderPath);
 }
 
 function overrideDestination($args) {
     $zipFileUrl = 'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/zipball/'.$args['rep_branch'];
-    $downloadHeaders = array(
+    $downloadHeaders = [
         'Authorization' => $args['rep_api_key'] ? 'Bearer '.$args['rep_api_key'] : null,
         'X-GitHub-Api-Version' => '2022-11-28',
-    );
+    ];
 
-    $zipFileContents = wp_remote_get($zipFileUrl, array('headers' => $downloadHeaders));
+    $zipFileContents = wp_remote_get($zipFileUrl, ['headers' => $downloadHeaders]);
 
     if ( is_wp_error($zipFileContents) || $zipFileContents['response']['code'] !== 200) return $zipFileContents;
 
     // download
-    $zipFilePath = WP_CONTENT_DIR.'/upgrade/'.$args['rep_name'].'zip';
-    if ( file_put_contents($zipFilePath, $zipFileContents['body']) === false ) {
-        return new \WP_Error( 'zip_not_copied', 'Zip file couldn not be created', ['status' => 418] );
+    $zipFilePath = WP_CONTENT_DIR . '/upgrade/' . $args['rep_name'] . 'zip';
+    if (file_put_contents($zipFilePath, $zipFileContents['body']) === false) {
+        return new \WP_Error('zip_not_copied', 'Zip file couldn not be created', ['status' => 418]);
     }
 
-    // delete the existing contents
-    $destDir = WP_CONTENT_DIR.'/'.$args['rep_dest'].'/'.$args['rep_name'];
-    deleteFolderContents($destDir); // ++error
-
-    // unzip to dest
-    if ( !class_exists('ZipArchive') ) {
-        return new \WP_Error( 'zip_cant_be_proceeded', 'ZipArchive library is not installed', ['status' => 418] );
+    // unzip to temporary directory
+    $destDir = WP_CONTENT_DIR . '/' . $args['rep_dest'] . '/' . $args['rep_name'];
+    $tmpDestDir = WP_CONTENT_DIR . '/' . $args['rep_dest'] . '/.' . $args['rep_name'] . '_tmp';
+    if (!class_exists('ZipArchive')) {
+        return new \WP_Error('zip_cant_be_proceeded', 'ZipArchive library is not installed', ['status' => 418]);
     }
     $zip = new \ZipArchive();
-    if ( $zip->open($zipFilePath) !== true ) {
-        return new \WP_Error( 'zip_cant_be_opened', 'Zip archive file seem to be broken', ['status' => 418] );
+    if ($zip->open($zipFilePath) !== true) {
+        return new \WP_Error('zip_cant_be_opened', 'Zip archive file seem to be broken', ['status' => 418]);
     }
 
-    if (!file_exists($destDir)) {
-        if (!mkdir($destDir, 0755, true)) {
-            return new \WP_Error( 'couldnt_create_directory', 'Could not create the destination directory', ['status' => 418] );
+    if (!file_exists($tmpDestDir)) {
+        if (!mkdir($tmpDestDir, 0755, true)) {
+            return new \WP_Error('couldnt_create_directory', 'Could not create the temporary destination directory', ['status' => 418]);
         }
     }
 
     for ($i = 0; $i < $zip->numFiles; $i++) {
         $filename = $zip->getNameIndex($i);
         $fileInfo = pathinfo($filename);
-        $targetPath = $destDir.'/'.$fileInfo['basename'];
+        $targetPath = $tmpDestDir . '/' . $fileInfo['basename'];
         copy("zip://$zipFilePath#$filename", $targetPath);
     }
 
     $zip->close();
 
+    // rename original directory to have a "_delete" postfix
+    if (!rename($destDir, $destDir.'_delete')) {
+        return new \WP_Error('couldnt_rename_directory', 'Could not rename the original directory', ['status' => 418]);
+    }
+
+    // rename temporary directory to the original name
+    if (!rename($tmpDestDir, $destDir)) {
+        return new \WP_Error('couldnt_rename_tmp_directory', 'Could not rename the temporary directory', ['status' => 418]);
+    }
+
+    // delete the directory with the "_delete" postfix
+    deleteFolder($destDir.'_delete');
     // delete zip
-    unlink( $zipFilePath );
+    unlink($zipFilePath);
 
     return [
         "installed" => true
