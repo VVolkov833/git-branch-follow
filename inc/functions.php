@@ -87,6 +87,10 @@ function overrideDestination($args) {
 };
 
 function processGitRequest($request) { //[id, action]
+    //error_log('processGitRequest '.$request['id'].' '.$request['action']);
+    if ( empty($request['id']) || empty($request['action'] )) {
+        return new \WP_Error( 'no_arguments', 'Not enough arguments for processGitRequest', ['status' => 422] );
+    }
 
     if ( FCGBF_DEV ) { // simulate server responce delay
         nocache_headers();

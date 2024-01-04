@@ -7,33 +7,51 @@ defined( 'ABSPATH' ) || exit;
 // schedule the autoupdates
 add_action( FCGBF_SLUG.'_auto_updates', 'FC\GitBranchFollow\auto_updates_hook', 10, 1 );
 function auto_updates_hook($postID) {
-    processGitRequest($postID, 'install');
+    //error_log('auto_updates_hook '.$postID.' install');
+    processGitRequest(['id' => $postID, 'action' => 'install']);
 }
 function schedule_auto_update($postID, $type) {
     if ( in_array( $type, ['1', '2'] ) ) {
-        wp_schedule_event( current_time('timestamp'), 'twicedaily', FCGBF_SLUG.'_auto_updates', [$postID] );
-    } else {
-        wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
+        wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_updates', [$postID] );
+        //error_log('schedule_auto_update '.$postID.' '.$type);
+        return;
     }
+    wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
 }
 
 
 // schedule the check
+register_activation_hook( FCGBF_REGISTER, function() {
+    wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_checks' );
+});
+register_deactivation_hook( FCGBF_REGISTER, function() {
+    wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_checks' );
+});
+
 add_action( FCGBF_SLUG.'_auto_checks', 'FC\GitBranchFollow\auto_checks_hook', 10, 0 );
 function auto_checks_hook() {    
+    global $wpdb;
+
     $post_ids = $wpdb->get_col($wpdb->prepare(
         "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s",
         FCGBF_SLUG
     ));
     foreach ($post_ids as $post_id) {
-        processGitRequest($post_id, 'check');
+        processGitRequest(['id' => $post_id, 'action' => 'check']);
     }
 }
-register_activation_hook(FCGBF_REGISTER, function() {
-    wp_schedule_event( current_time('timestamp'), 'twicedaily', FCGBF_SLUG.'_auto_checks' );
-});
-register_deactivation_hook(FCGBF_REGISTER, function() {
-    wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_checks' );
-});
 
+function get_schedule_start() {
+    if ( !FCGBF_DEV ) { return time(); }
+    return time() + 60*3;
+}
+
+function display_next_event_time($event_hook, $event_args = []) {
+    if ( !( $next_event_timestamp = wp_next_scheduled($event_hook, $event_args) ) ) { return false; }
+    $time_remaining = $next_event_timestamp - time();
+    $hours = floor($time_remaining / 3600);
+    $minutes = floor(($time_remaining % 3600) / 60);
+    return $hours.'h '. $minutes.'m';
+}
+// ++ !! remove the event on post delete and restore on restore!!
 // ++ clear the events on disable the plugin (wp_clear_scheduled_hook(FCGBF_SLUG.'_auto_updates');) and re-enable on install
