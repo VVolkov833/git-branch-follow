@@ -7,6 +7,11 @@ defined( 'ABSPATH' ) || exit;
 register_activation_hook(FCGBF_REGISTER, function() {
     global $wpdb;
 
+    // schedule auto-checks for all entries
+    wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_checks' );
+    // ++ add event for existing posts in case of re-activating
+
+    
     // add the first entry to update itself
 
     // check if the record about self already exists
@@ -52,9 +57,7 @@ register_activation_hook(FCGBF_REGISTER, function() {
 
     // schedule the auto-updates for the entry
     schedule_auto_update( $post_id, '1' );
-    // schedule auto-checks for all entries
-    wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_checks' );
-    // ++ add event for existing posts in case of re-activating
+
 });
 
 
