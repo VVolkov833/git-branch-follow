@@ -129,6 +129,10 @@ function processGitRequest($request) { //[id, action]
     if ( is_wp_error( $gitResponse ) ) { return $gitResponse; }
 
     $gitResponseBody = json_decode(stripslashes(wp_remote_retrieve_body( $gitResponse )));
+    $gitResponseCode = wp_remote_retrieve_response_code( $gitResponse );
+
+    if ( $gitResponseCode !== 200 ) { return ['body' => $gitResponseBody, 'code' => $gitResponseCode]; }
+
     $gitResponseBody->extended_locally = [];
 
     // git zip, override

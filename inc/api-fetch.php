@@ -11,7 +11,7 @@ add_action( 'rest_api_init', function () {
         'callback' => function(\WP_REST_Request $request) {
 
             if ( is_wp_error( $response = processGitRequest($request) ) ) { return $response; }
-
+return $response;
             ['body' => $gitResponseBody, 'code' => $gitResponseCode] = $response;
             return new \WP_REST_Response( $gitResponseBody, $gitResponseCode );
 
