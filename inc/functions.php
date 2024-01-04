@@ -21,20 +21,6 @@ function gitBranchInfos($args) {
     return $gitResponse;
 }
 
-function deleteFolder($folderPath) {
-    if (!is_dir($folderPath)) { return false; }
-    $files = array_diff( scandir($folderPath), ['.', '..'] );
-    foreach ($files as $file) {
-        $filePath = $folderPath . '/' . $file;
-        if (is_dir($filePath)) {
-            deleteFolder($filePath);
-        } else {
-            unlink($filePath);
-        }
-    }
-    return rmdir($folderPath);
-}
-
 function overrideDestination($args) {
     $zipFileUrl = 'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/zipball/'.$args['rep_branch'];
     $downloadHeaders = [
@@ -58,7 +44,7 @@ function overrideDestination($args) {
     }
     $zip = new \ZipArchive();
     if ($zip->open($zipFilePath) !== true) {
-        return new \WP_Error('zip_cant_be_opened', 'Zip archive file seem to be broken', ['status' => 418]);
+        return new \WP_Error('zip_cant_be_opened', 'Zip archive file seems to be broken', ['status' => 418]);
     }
     $unZipDir = WP_CONTENT_DIR . '/upgrade/' . $args['rep_name'] . '_tmp';
     if (!file_exists($unZipDir)) {
@@ -71,25 +57,21 @@ function overrideDestination($args) {
     }
     $zip->close();
 
-    // rename $destDir to $destDir.'_delete'
-    $destDir = WP_CONTENT_DIR . '/' . $args['rep_dest'] . '/' . $args['rep_name'];
-    $deletedDir = WP_CONTENT_DIR . '/' . $args['rep_dest'] . '/.' . $args['rep_name'] . '_delete';
-    rename($destDir, $deletedDir);
 
-    // Check if $unZipDir contains only one folder
-    $contents = glob($unZipDir . '/*'); //scandir
+    // manipulate the contents
+    $destDir = WP_CONTENT_DIR . '/' . $args['rep_dest'] . '/' . $args['rep_name'];
+    rrmdir($destDir);
+
+    $contents = glob($unZipDir . '/*');
     if (count($contents) === 1 && is_dir($contents[0])) {
-        // If there's only one directory, move it to $destDir
-        rename($contents[0], $destDir);
+        rcopy($contents[0], $destDir); // If there's only one directory, move it to $destDir
     } else {
-        // If there's more than one directory, move the entire $unZipDir to $destDir
-        rename($unZipDir, $destDir);
+        rename($unZipDir, $destDir); // If there's more than one directory, move the entire $unZipDir to $destDir
     }
 
     // Delete unnecessary folders and files
     unlink($zipFilePath);
-    deleteFolder($deletedDir);
-    deleteFolder($unZipDir);
+    rrmdir($unZipDir);
 
     return [
         "installed" => true
@@ -195,4 +177,29 @@ function display_next_event_time($event_hook, $event_args = []) {
     $hours = floor($time_remaining / 3600);
     $minutes = floor(($time_remaining % 3600) / 60);
     return $hours.'h '. $minutes.'m';
+}
+
+function rcopy($src, $dst) {
+    if (file_exists($dst)) rrmdir($dst);
+    if (is_dir($src)) {
+      mkdir($dst);
+      $files = scandir($src);
+      foreach ($files as $file)
+      if ($file != "." && $file != "..") rcopy("$src/$file", "$dst/$file"); 
+    }
+    else if (file_exists($src)) copy($src, $dst);
+  }
+
+  function rrmdir($folderPath) {
+    if (!is_dir($folderPath)) { return false; }
+    $files = array_diff( scandir($folderPath), ['.', '..'] );
+    foreach ($files as $file) {
+        $filePath = $folderPath . '/' . $file;
+        if (is_dir($filePath)) {
+            rrmdir($filePath);
+        } else {
+            unlink($filePath);
+        }
+    }
+    return rmdir($folderPath);
 }
