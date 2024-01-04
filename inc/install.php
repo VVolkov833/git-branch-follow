@@ -51,9 +51,18 @@ register_activation_hook(FCGBF_REGISTER, function() {
     ));
 
     // schedule the auto-updates for the entry
-    if ( function_exists( __NAMESPACE__ . '\schedule_auto_update' ) ) {
-        schedule_auto_update( $post_id, '1' );
-    }
+    schedule_auto_update( $post_id, '1' );
+    // schedule auto-checks for all entries
+    wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_checks' );
+    // ++ add event for existing posts in case of re-activating
+});
+
+
+register_deactivation_hook( FCGBF_REGISTER, function() {
+    // check
+    wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_checks' );
+    // update
+    wp_unschedule_hook( FCGBF_SLUG.'_auto_updates' );
 });
 
 /*

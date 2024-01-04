@@ -174,3 +174,27 @@ function processGitRequest($request) { //[id, action]
     return ['body' => $gitResponseBody, 'code' => wp_remote_retrieve_response_code( $gitResponse )];
 
 }
+
+// schedule functions
+
+function schedule_auto_update($postID, $type) {
+    if ( in_array( $type, ['1', '2'] ) ) {
+        wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_updates', [$postID] );
+        //error_log('schedule_auto_update '.$postID.' '.$type);
+        return;
+    }
+    wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
+}
+
+function get_schedule_start() {
+    if ( !FCGBF_DEV ) { return time(); }
+    return time() + 60*3;
+}
+
+function display_next_event_time($event_hook, $event_args = []) {
+    if ( !( $next_event_timestamp = wp_next_scheduled($event_hook, $event_args) ) ) { return false; }
+    $time_remaining = $next_event_timestamp - time();
+    $hours = floor($time_remaining / 3600);
+    $minutes = floor(($time_remaining % 3600) / 60);
+    return $hours.'h '. $minutes.'m';
+}
