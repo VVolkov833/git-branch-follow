@@ -132,7 +132,6 @@ function auto_updates() {
 
     </div>
     <?php
-    echo get_schedule_start();
 }
 
 
