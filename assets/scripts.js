@@ -67,6 +67,7 @@
                     } else if ( jsonData.extended_locally?.installed === true ) {
                         checked_field.innerHTML = '';
                         current_field.innerHTML = formatData('Just Updated', jsonData);
+                        highlight_element.classList.remove(`${PREF}update-available`);
                     }
                     response_field.innerHTML = `<h3>Full responce:</h3><pre>${JSON.stringify(jsonData, null, 2)}</pre>`;
                 } catch (error) {
