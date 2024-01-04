@@ -46,8 +46,6 @@ require_once FCGBF_DIR . 'inc/install.php';
 /* future improvements
 buttons to the list
 	+refactor
-schedule checks must have & updates optionally?
-	check as normal
-	updater: newer | any
-mark mentioned in themes & plugins admin?
+mark mentioned in themes & plugins admin
+readme
 */
