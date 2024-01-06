@@ -32,7 +32,7 @@ add_action( 'save_post', function( $postID ) {
 
 // update the title
 add_filter('wp_insert_post_data', function ($data, $postarr) {
-    if ( $data['post_type'] !== FCGBF_SLUG || !current_user_can('administrator') ) { return; }
+    if ( $data['post_type'] !== FCGBF_SLUG || !current_user_can('administrator') ) { return $data; }
 
     $rep_url = $postarr[FCGBF_PREF.'rep-url'] ?? get_post_meta( $postarr['ID'], FCGBF_PREF.'rep-url' )[0] ?? '';
     $rep_url = gitUrlSplit( $rep_url );
