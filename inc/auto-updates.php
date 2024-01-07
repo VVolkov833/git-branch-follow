@@ -34,7 +34,7 @@ function auto_checks_hook() {
 
     $post_ids = $wpdb->get_col($wpdb->prepare(
         "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s",
-        FCGBF_SLUG, FCGBF_PREF.'active'
+        FCGBF_SLUG, 'publish'
     ));
     foreach ($post_ids as $post_id) {
         processGitRequest(['id' => $post_id, 'action' => 'check']);

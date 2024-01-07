@@ -91,7 +91,7 @@ function processGitRequest($request) { //[id, action]
 
     $wp_query_args = [
         'post_type' => FCGBF_SLUG,
-        'post_status' => FCGBF_PREF.'active',//['publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit'],
+        'post_status' => 'publish',
         'p' => $request['id'],
     ];
 

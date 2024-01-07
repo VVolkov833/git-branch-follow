@@ -21,23 +21,7 @@ add_action( 'admin_enqueue_scripts', function($hook) {
 });
 
 
-// *****limit post statuses only to FCGBF_PREF.'active'
-
-add_action( 'init', function() {
-	register_post_status( FCGBF_PREF.'active', [
-		'label'                     => __( 'Active' ),
-        'label_count'               => false,
-        'exclude_from_search'       => true,
-        '_builtin'                  => false,
-        'public'                    => false,
-        'internal'                  => true,
-        'protected'                 => true,
-        'private'                   => true,
-        'publicly_queryable'        => false,
-        'show_in_admin_status_list' => false,
-        'show_in_admin_all_list'    => false,
-	]);
-});
+// *****limit post statuses only to publish (also trash and auto-draft)
 
 // hide the quick edit option
 add_filter('post_row_actions', function ($actions) {

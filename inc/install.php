@@ -7,6 +7,23 @@ defined( 'ABSPATH' ) || exit;
 register_activation_hook(FCGBF_REGISTER, function() {
     global $wpdb;
     
+
+//// DELETEME ******************
+
+$activeStatus = FCGBF_PREF . 'active';
+$newStatus = 'publish';
+
+// Update posts with the specified condition
+$query = $wpdb->prepare("
+    UPDATE {$wpdb->posts}
+    SET post_status = %s
+    WHERE post_status = %s
+", $newStatus, $activeStatus);
+
+$wpdb->query($query);
+
+///// ////// DELETEME **************
+
     // add the self entry to update the plugin automatically
 
     // check if the record about self already exists
@@ -20,7 +37,7 @@ register_activation_hook(FCGBF_REGISTER, function() {
         $post_args = array(
             'post_title'   => 'git-branch-follow',
             'post_type'    => FCGBF_SLUG,
-            'post_status'  => FCGBF_PREF.'active',
+            'post_status'  => 'publish',
             'comment_status' => 'closed',
             'ping_status'    => 'closed',
         );
@@ -61,7 +78,7 @@ register_activation_hook(FCGBF_REGISTER, function() {
         AND m1.meta_key = %s
         AND m1.meta_value <> %s
         ",
-        FCGBF_PREF.'rep-new', FCGBF_SLUG, FCGBF_PREF.'active', FCGBF_PREF.'rep-auto-updates', '0'
+        FCGBF_PREF.'rep-new', FCGBF_SLUG, 'publish', FCGBF_PREF.'rep-auto-updates', '0'
     ));
 
     $time = get_schedule_start();
