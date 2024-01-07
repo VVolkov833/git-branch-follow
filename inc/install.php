@@ -6,23 +6,7 @@ defined( 'ABSPATH' ) || exit;
 
 register_activation_hook(FCGBF_REGISTER, function() {
     global $wpdb;
-    
 
-//// DELETEME ******************
-
-$activeStatus = FCGBF_PREF . 'active';
-$newStatus = 'publish';
-
-// Update posts with the specified condition
-$query = $wpdb->prepare("
-    UPDATE {$wpdb->posts}
-    SET post_status = %s
-    WHERE post_status = %s
-", $newStatus, $activeStatus);
-
-$wpdb->query($query);
-
-///// ////// DELETEME **************
 
     // add the self entry to update the plugin automatically
 
@@ -81,7 +65,7 @@ $wpdb->query($query);
         FCGBF_PREF.'rep-new', FCGBF_SLUG, 'publish', FCGBF_PREF.'rep-auto-updates', '0'
     ));
 
-    $time = get_schedule_start();
+    $time = get_schedule_start(); // to function as used twice?
     $time_offset = 0;
     foreach ($results as $row) {
         if ( schedule_auto_update( (int) $row->ID, (string) $row->auto_updates_type, !empty($row->has_updates), ($time += $time_offset) ) !== 'updateEventAdded' ) { continue; }

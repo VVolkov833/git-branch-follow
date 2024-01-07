@@ -36,7 +36,17 @@ function auto_checks_hook() {
         "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s",
         FCGBF_SLUG, 'publish'
     ));
+
+    $time = get_schedule_start();
+    $time_offset = 0;
     foreach ($post_ids as $post_id) {
-        processGitRequest(['id' => $post_id, 'action' => 'check']);
+        $result = processGitRequest(['id' => $post_id, 'action' => 'check']);
+        if ( is_wp_error( $result ) ) {
+            if ( FCGBF_DEV ) { error_log($postID); error_log($result); }
+            continue;
+        }
+        if ( schedule_auto_update( (int) $postID, null, null, ($time += $time_offset) ) !== 'updateEventAdded' ) { continue; }
+        $time_offset += 60*5;
+
     }
 }
