@@ -26,7 +26,7 @@ add_action( 'save_post', function( $postID ) {
     }
 
     // schedule the update event
-    schedule_auto_update($postID, $_POST[FCGBF_PREF.'rep-auto-updates']);
+    schedule_auto_update( $postID, $_POST[FCGBF_PREF.'rep-auto-updates'] );
 
 });
 

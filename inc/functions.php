@@ -157,27 +157,50 @@ function processGitRequest($request) { //[id, action]
 
 // schedule functions
 
-function schedule_auto_update($postID, $type) {
-    if ( in_array( $type, ['1', '2'] ) ) {
-        wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_updates', [$postID] );
-        //error_log('schedule_auto_update '.$postID.' '.$type);
-        return;
-    }
+function schedule_auto_update($postID, $updateType = null, $hasUpdates = null, $start = null) {
+    $updateType ??= get_post_meta( $postID, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0';
+
     wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
+
+    if ( $updateType === '0' ) { return 'updateEventCleared'; }
+
+    $hasUpdates ??= get_post_meta($postID, FCGBF_PREF.'rep-new')[0] ?? false;
+    $hasUpdates = !!(function() use ($updateType, &$hasUpdates) {
+        switch ($updateType) {
+            case '0': return false;
+            case '1': return $hasUpdates;
+            case '2': return true;
+        };
+    })();
+    if ( $hasUpdates === false ) { return ''; }
+
+    $start ??= get_schedule_start();
+    $result = wp_schedule_single_event( $start, FCGBF_SLUG.'_auto_updates', [$postID] ) === true ? 'updateEventAdded' : 'failedAddingUpdatEvent';
+    //error_log(print_r([$postID, 'scheduled: '.$result], true));
+    return $result;
 }
 
 function get_schedule_start() {
-    if ( !FCGBF_DEV ) { return time(); }
     return time() + 60*3;
 }
 
-function display_next_event_time($event_hook, $event_args = []) {
-    if ( !( $next_event_timestamp = wp_next_scheduled($event_hook, $event_args) ) ) { return false; }
-    $time_remaining = $next_event_timestamp - time();
+function next_update_in($postID) {
+    $event = wp_get_scheduled_event( FCGBF_SLUG.'_auto_updates', [$postID] );
+    if ( !$event ) { return FCGBF_DEV ? 'The update event not set' : ''; }
+    return $timestamp = 'The next update in: '.event_happens_in( $event->timestamp );
+}
+function next_check_in() {
+    $event = wp_next_scheduled( FCGBF_SLUG.'_auto_checks' );
+    if ( $event === false ) { return FCGBF_DEV ? 'The check event not set' : ''; }
+    return $timestamp = 'The next check in: '.event_happens_in( $event );
+}
+function event_happens_in($time) {
+    $time_remaining = $time - time();
     $hours = floor($time_remaining / 3600);
     $minutes = floor(($time_remaining % 3600) / 60);
-    return $hours.'h '. $minutes.'m';
+    return $hours.'h '. $minutes.'m';    
 }
+
 
 function rcopy($src, $dst) {
     if (file_exists($dst)) rrmdir($dst);
