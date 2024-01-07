@@ -42,10 +42,10 @@ function auto_checks_hook() {
     foreach ($post_ids as $post_id) {
         $result = processGitRequest(['id' => $post_id, 'action' => 'check']);
         if ( is_wp_error( $result ) ) {
-            if ( FCGBF_DEV ) { error_log($postID); error_log($result); }
+            if ( FCGBF_DEV ) { error_log($post_id); error_log($result); }
             continue;
         }
-        if ( schedule_auto_update( (int) $postID, null, null, ($time += $time_offset) ) !== 'updateEventAdded' ) { continue; }
+        if ( schedule_auto_update( (int) $post_id, null, null, ($time += $time_offset) ) !== 'updateEventAdded' ) { continue; }
         $time_offset += 60*5;
 
     }
