@@ -2,7 +2,7 @@
 /*
 Plugin Name: Git Branch Follow
 Description: Connect to GitHub repositories, automatically track changes across branches, and ensure your plugins and themes are always up-to-date. Simplify your WordPress management with this seamless integration.
-Version: 1.0.0
+Version: 1.1.0
 Requires at least: 6.0
 Tested up to: 6.4
 Requires PHP: 7.4
