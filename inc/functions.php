@@ -194,13 +194,13 @@ function get_schedule_start() {
 
 function next_update_in($postID) {
     $event = wp_get_scheduled_event( FCGBF_SLUG.'_auto_updates', [$postID] );
-    if ( !$event ) { return FCGBF_DEV ? 'The update event not set' : ''; }
-    return $timestamp = 'The next update in: '.event_happens_in( $event->timestamp );
+    if ( !$event ) { return FCGBF_DEV ? '<p>The next update event not set</p>' : ''; }
+    return $timestamp = '<p>The next update in: '.event_happens_in($event->timestamp).'</p>';
 }
 function next_check_in() {
     $event = wp_next_scheduled( FCGBF_SLUG.'_auto_checks' );
-    if ( $event === false ) { return FCGBF_DEV ? 'The check event not set' : ''; }
-    return $timestamp = 'The next check in: '.event_happens_in( $event );
+    //if ( $event === false ) { return FCGBF_DEV ? '<p>The check event not set.<br>Please re-activate the plugin.</p>' : ''; }
+    return $timestamp = '<p>The next check in: '.event_happens_in($event).'</p>';
 }
 function event_happens_in($time) {
     $time_remaining = $time - time();

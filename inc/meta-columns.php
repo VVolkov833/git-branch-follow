@@ -22,10 +22,12 @@ add_action('manage_'.FCGBF_SLUG.'_posts_custom_column', function($column, $post_
             echo $exists ? '<span style="color:var(--fcgbf-update-available-color);font-weight:bold">YES</span>' : '';
         break;
         case FCGBF_SLUG.'rep_auto_updates':
-            echo ['0' => 'Off', '1' => 'Enabled', '2' => 'Force'][get_post_meta( $post_id, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0'];
-            if ( !FCGBF_DEV ) { break; }
-            echo '<br>'.next_check_in();
-            echo '<br>'.next_update_in($post_id);
+            $auto_updates_type = get_post_meta( $post_id, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0';
+            echo ['0' => 'Off', '1' => 'Enabled', '2' => 'Force'][ $auto_updates_type ];
+            if ( $auto_updates_type === '0' ) { break; }
+            echo next_update_in($post_id);
+            if ( !FCGBF_DEV ) { break; };
+            echo next_check_in();
         break;
     }
 }, 10, 2);

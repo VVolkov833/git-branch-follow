@@ -122,13 +122,12 @@ function auto_updates() {
 
     <p>The <em>Force</em> option will run the process every scheduled time even if there are no new commits</p>
 
-    <?php if ( $trigger_next_time ) { ?>
-        <p><?php echo $trigger_next_time ?></p>
-    <?php } ?>
-
-    <?php if ( FCGBF_DEV ) { ?>
-        <p><?php echo next_check_in() ?></p>
-    <?php } ?>
+    <?php
+    if ( $auto_updates_type !== '0' ) {
+        echo $trigger_next_time;
+        echo next_check_in();
+    }
+    ?>
 
     </div>
     <?php
