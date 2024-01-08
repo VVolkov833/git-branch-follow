@@ -44,7 +44,7 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
-schedule testing update delete me
+should I restore the checks for repositoreis without auto-updates?
 buttons to the list
 	+refactor
 mark mentioned in themes & plugins admin
