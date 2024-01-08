@@ -108,7 +108,7 @@ function auto_updates() {
 
     $has_updates = !empty( get_post_meta( $post->ID, FCGBF_PREF.'rep-new' )[0] ?? [] );
     $trigger_next_time = next_update_in($post->ID);
-    $auto_updates_option = get_post_meta( $post->ID, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0';
+    $auto_updates_type = get_post_meta( $post->ID, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0';
 
     ?>
     <div class="<?php echo FCGBF_PREF ?>auto-update">
@@ -116,7 +116,7 @@ function auto_updates() {
         select( (object) [
             'name' => 'rep-auto-updates',
             'options' => ['0' => 'Off', '1' => 'Enabled', '2' => 'Force'], // ++ move all options to one place
-            'value' => $auto_updates_option,
+            'value' => $auto_updates_type,
         ]);
     ?>
 

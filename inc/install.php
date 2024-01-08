@@ -48,9 +48,6 @@ register_activation_hook(FCGBF_REGISTER, function() {
 
     // add schedules
 
-    // schedule auto-checks
-    wp_schedule_event( get_schedule_start(), 'twicedaily', FCGBF_SLUG.'_auto_checks' );
-
     // schedule the auto-updates for existing entries (self, re-activate)
     $results = $wpdb->get_results( $wpdb->prepare("
         SELECT p.ID, m1.meta_value AS auto_updates_type, COALESCE(m2.meta_value, '') AS has_updates
@@ -66,11 +63,13 @@ register_activation_hook(FCGBF_REGISTER, function() {
     ));
 
     $time = get_schedule_start(); // to function as used twice?
-    $time_offset = 0;
     foreach ($results as $row) {
-        if ( schedule_auto_update( (int) $row->ID, (string) $row->auto_updates_type, !empty($row->has_updates), ($time += $time_offset) ) !== 'updateEventAdded' ) { continue; }
-        $time_offset += 60*5;
+        if ( schedule_auto_update( (int) $row->ID, (string) $row->auto_updates_type, !empty($row->has_updates), $time ) !== 'updateEventAdded' ) { continue; }
+        $time += 60*3;
     }
+
+    // schedule auto-checks
+    wp_schedule_event( $time, 'twicedaily', FCGBF_SLUG.'_auto_checks' );
 });
 
 

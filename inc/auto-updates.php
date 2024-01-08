@@ -7,11 +7,11 @@ defined( 'ABSPATH' ) || exit;
 
 // trash / untrash
 add_action( 'trashed_post', function($postID) {
-    //wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
+    schedule_auto_update( $postID, '0' );
 });
 add_action( 'untrashed_post', function($postID) {
-    if ( ($post_type = get_post_type( $postID )) !==  FCGBF_SLUG ) { return; }
-    schedule_auto_update($postID);
+    if ( get_post_type( $postID ) !==  FCGBF_SLUG ) { return; }
+    schedule_auto_update( $postID );
 } );
 
 // shedules hooks
@@ -19,7 +19,6 @@ add_action( 'untrashed_post', function($postID) {
 // update
 add_action( FCGBF_SLUG.'_auto_updates', 'FC\GitBranchFollow\auto_updates_hook', 10, 1 );
 function auto_updates_hook($postID) {
-    //error_log('auto_updates_hook '.$postID.' install');
     $result = processGitRequest(['id' => $postID, 'action' => 'install']);
     if ( is_wp_error( $result ) ) {
         schedule_auto_update( $postID, null, null, get_schedule_start() + 60*60 );
@@ -37,16 +36,10 @@ function auto_checks_hook() {
         FCGBF_SLUG, 'publish'
     ));
 
-    $time = get_schedule_start();
-    $time_offset = 0;
     foreach ($post_ids as $post_id) {
         $result = processGitRequest(['id' => $post_id, 'action' => 'check']);
         if ( is_wp_error( $result ) ) {
             if ( FCGBF_DEV ) { error_log($post_id); error_log($result); }
-            continue;
         }
-        if ( schedule_auto_update( (int) $post_id, null, null, ($time += $time_offset) ) !== 'updateEventAdded' ) { continue; }
-        $time_offset += 60*5;
-
     }
 }

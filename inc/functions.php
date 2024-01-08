@@ -136,15 +136,23 @@ function processGitRequest($request) { //[id, action]
         // update the meta
         update_post_meta( $request['id'], FCGBF_PREF.'rep-current', $gitResponseBody );
         delete_post_meta( $request['id'], FCGBF_PREF.'rep-new' );
+
+        // auto updates for Force auto-updates-type
+        $auto_updates_type = get_post_meta( $request['id'], FCGBF_PREF.'rep-auto-updates' )[0] ?? '0';
+        if ( $auto_updates_type === '2' ) {
+            schedule_auto_update( $request['id'], $auto_updates_type, null, get_schedule_start() + 60*60*12 );
+        }
     }
 
     // update the meta after check with changes
     if ( $request['action'] === 'check' ) {
         $gitResponseBody->extended_locally = (object) array_merge((array)  $gitResponseBody->extended_locally, ["checked" => true], ["date" => time()]);
-        //delete_post_meta( $request['id'], FCGBF_PREF.'rep-new' );
+
+        // update the meta
         $repCurrentBody = get_post_meta( $request['id'], FCGBF_PREF.'rep-current' )[0] ?? [];
-        if (empty($repCurrentBody) || $repCurrentBody->commit->sha !== $gitResponseBody->commit->sha) {
+        if (empty($repCurrentBody) || $repCurrentBody->commit->sha !== $gitResponseBody->commit->sha) { // has changes
             update_post_meta( $request['id'], FCGBF_PREF.'rep-new', $gitResponseBody );
+            schedule_auto_update( $request['id'], null, true, get_schedule_start() );
             $gitResponseBody->extended_locally = (object) array_merge((array) $gitResponseBody->extended_locally, ["has_changes" => true]);
         }
     }
@@ -165,7 +173,7 @@ function schedule_auto_update($postID, $updateType = null, $hasUpdates = null, $
     if ( $updateType === '0' ) { return 'updateEventCleared'; }
 
     $hasUpdates ??= get_post_meta($postID, FCGBF_PREF.'rep-new')[0] ?? false;
-    $hasUpdates = !!(function() use ($updateType, &$hasUpdates) {
+    $hasUpdates = !!(function() use ($updateType, $hasUpdates) {
         switch ($updateType) {
             case '0': return false;
             case '1': return $hasUpdates;
