@@ -44,6 +44,7 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
+schedule testing update delete me
 buttons to the list
 	+refactor
 mark mentioned in themes & plugins admin
