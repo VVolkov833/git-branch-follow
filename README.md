@@ -5,15 +5,15 @@
 ## Features
 
 * Checks for updates every 12 hours or by click
-* Auto updates off/on/forse
+* Auto updates off/on/force
 * Works with public and private repositories
 * Pure PHP, good for cheap or shared hosting
 * Doesn't depend on the wp native updating processes
 
 ## Usage
 
-* Install and activate the plugin.
-* Navigate to "Git Repositories" in the left sidebar of your wp-admin.
+* Install and activate the plugin
+* Navigate to "Git Repositories" in the left sidebar of your wp-admin
 * Click "Add New"
 * Fill in the fields and save
 * **Note:** Git API Key is not required for public repositories
