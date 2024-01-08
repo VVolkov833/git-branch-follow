@@ -62,9 +62,9 @@ register_activation_hook(FCGBF_REGISTER, function() {
         FCGBF_PREF.'rep-new', FCGBF_SLUG, 'publish', FCGBF_PREF.'rep-auto-updates', '0'
     ));
 
-    $time = get_schedule_start(); // to function as used twice?
+    $time = get_schedule_start();
     foreach ($results as $row) {
-        if ( schedule_auto_update( (int) $row->ID, (string) $row->auto_updates_type, !empty($row->has_updates), $time ) !== 'updateEventAdded' ) { continue; }
+        if ( schedule_auto_update( $row->ID, (string) $row->auto_updates_type, !empty($row->has_updates), $time ) !== 'updateEventAdded' ) { continue; }
         $time += 60*3;
     }
 

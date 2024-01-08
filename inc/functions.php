@@ -166,6 +166,7 @@ function processGitRequest($request) { //[id, action]
 // schedule functions
 
 function schedule_auto_update($postID, $updateType = null, $hasUpdates = null, $start = null) {
+    $postID = (int) $postID;
     $updateType ??= get_post_meta( $postID, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0';
 
     wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
@@ -193,7 +194,7 @@ function get_schedule_start() {
 }
 
 function next_update_in($postID) {
-    $event = wp_get_scheduled_event( FCGBF_SLUG.'_auto_updates', [$postID] );
+    $event = wp_get_scheduled_event( FCGBF_SLUG.'_auto_updates', [(int) $postID] );
     if ( !$event ) { return FCGBF_DEV ? '<p>The next update event not set</p>' : ''; }
     return $timestamp = '<p>The next update in: '.event_happens_in($event->timestamp).'</p>';
 }
