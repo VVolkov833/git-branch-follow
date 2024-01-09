@@ -51,4 +51,5 @@ buttons to the list
 mark mentioned in themes & plugins admin
 lines marked with ++
 on some fails restoration can be scheduled
+add notice to the editor to existing reps, that the changes will be overridden
 */
