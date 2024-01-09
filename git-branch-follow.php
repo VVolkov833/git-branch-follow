@@ -50,4 +50,5 @@ buttons to the list
 	+improve the columns ux
 mark mentioned in themes & plugins admin
 lines marked with ++
+on some fails restoration can be scheduled
 */
