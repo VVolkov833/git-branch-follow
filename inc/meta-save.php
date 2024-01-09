@@ -37,7 +37,7 @@ add_filter('wp_insert_post_data', function ($data, $postarr) {
     $rep_url = $postarr[FCGBF_PREF.'rep-url'] ?? get_post_meta( $postarr['ID'], FCGBF_PREF.'rep-url' )[0] ?? '';
     $rep_url = gitUrlSplit( $rep_url );
 
-    $data['post_title'] = $rep_url[1] ?: 'Repository not set'; // ++on untrash it loses the title
+    $data['post_title'] = $rep_url[1] ?: 'Repository not set';
     $data['post_status'] = in_array($data['post_status'], ['auto-draft', 'trash']) ? $data['post_status'] : 'publish';
 
     return $data;

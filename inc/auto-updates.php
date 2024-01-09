@@ -31,6 +31,7 @@ add_action( FCGBF_SLUG.'_auto_checks', 'FC\GitBranchFollow\auto_checks_hook', 10
 function auto_checks_hook() {    
     global $wpdb;
 
+    // ++ exclude those with auto-update type === '0'?
     $post_ids = $wpdb->get_col($wpdb->prepare(
         "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s",
         FCGBF_SLUG, 'publish'

@@ -48,4 +48,5 @@ should I restore the checks for repositoreis without auto-updates?
 buttons to the list
 	+refactor
 mark mentioned in themes & plugins admin
+lines marked with ++
 */
