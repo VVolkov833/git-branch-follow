@@ -16,4 +16,7 @@
 * Navigate to "Git Repositories" in the left sidebar of your wp-admin
 * Click "Add New"
 * Fill in the fields and save
-* **Note:** Git API Key is not required for public repositories
+
+## Notes
+* Git API Key is not required for public repositories
+* Deleting a Git Repository entry doesn't delete the folder copy
