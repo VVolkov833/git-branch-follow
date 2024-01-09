@@ -47,6 +47,7 @@ require_once FCGBF_DIR . 'inc/install.php';
 should I restore the checks for repositoreis without auto-updates?
 buttons to the list
 	+refactor
+	+improve the columns ux
 mark mentioned in themes & plugins admin
 lines marked with ++
 */
