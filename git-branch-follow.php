@@ -53,4 +53,6 @@ lines marked with ++
 on some fails restoration can be scheduled
 add notice to the editor to existing reps, that the changes will be overridden
 allow to select an older commit and disable updates at the same time
+		'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/commits?per_page=20&sha='.$args['rep_branch']
+		'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/zipball/{commit_sha}
 */
