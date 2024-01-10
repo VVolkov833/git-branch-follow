@@ -8,7 +8,7 @@
 * Auto updates off/on/force
 * Works with public and private repositories
 * Pure PHP, good for cheap or shared hosting
-* Doesn't depend on the wp native updating processes
+* Doesn't depend on the WP native updating processes
 
 ## Usage
 
