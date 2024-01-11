@@ -61,4 +61,5 @@ allow to select an older commit and disable updates at the same time
 		'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/zipball/{commit_sha}
 add other popular git reps
 hide negative values of scheduled events
+clear/postphone the update scheduled after the update is successful
 */
