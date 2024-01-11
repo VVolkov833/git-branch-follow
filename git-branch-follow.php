@@ -50,6 +50,9 @@ buttons to the list
 	+refactor
 	+improve the columns ux
 mark mentioned in themes & plugins admin
+	also add UPPERCASE TEXT FILE TO THEME/PLUGIN DIR THAT THE CHANGES ARE CONTROLLED BY GIT
+		DIRECT-CHANGES-IN-THIS-FOLDER-OVERRIDES
+			delete on uninstall
 lines marked with ++
 on some fails restoration can be scheduled
 add notice to the editor to existing reps, that the changes will be overridden
