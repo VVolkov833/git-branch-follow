@@ -44,7 +44,8 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
-should I restore the checks for repositoreis without auto-updates?
+should I cancel the checks for repositoreis without auto-updates?
+add webooks support
 buttons to the list
 	+refactor
 	+improve the columns ux
