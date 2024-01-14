@@ -179,6 +179,7 @@ function schedule_auto_update($postID, $updateType = null, $hasUpdates = null, $
             case '0': return false;
             case '1': return $hasUpdates;
             case '2': return true;
+            case '3': return true;
         };
     })();
     if ( $hasUpdates === false ) { return ''; }

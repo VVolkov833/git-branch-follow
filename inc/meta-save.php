@@ -62,7 +62,7 @@ function sanitize_meta( $value, $field, $postID ) {
             return in_array($value, ['plugins', 'themes']) ? $value : 'plugins';
         break;
         case ( 'rep-auto-updates' ):
-            return in_array($value, ['0', '1', '2']) ? $value : '0';
+            return in_array($value, ['0', '1', '2', '3']) ? $value : '0';
         break;
     }
 

@@ -115,12 +115,14 @@ function auto_updates() {
     <?php
         select( (object) [
             'name' => 'rep-auto-updates',
-            'options' => ['0' => 'Off', '1' => 'Enabled', '2' => 'Force'], // ++ move all options to one place
+            'options' => ['0' => 'Off', '1' => 'Enabled', '2' => 'Force', '3' => 'Webhook'], // ++ move all options to one place
             'value' => $auto_updates_type,
         ]);
     ?>
 
     <p>The <em>Force</em> option will run the process every scheduled time even if there are no new commits</p>
+    
+    <p>The <em>Webhook</em> URL: <br><?php echo home_url('/wp-json/fcgbf/v1/update/') ?></p>
 
     <?php
     if ( $auto_updates_type !== '0' ) {
