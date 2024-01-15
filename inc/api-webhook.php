@@ -12,11 +12,15 @@ add_action( 'rest_api_init', function () {
 
             $data = $request->get_json_params();
 
-            if ( empty($data['repository_url']) ) { return new \WP_REST_Response('Repository URL is required', 400); }
-
-            if ( !($post_id = get_post_id_by_meta_value(FCGBF_PREF.'rep-url', $data['repository_url'])) ) { return new \WP_REST_Response('Post not found for the given repository URL', 404); }
-
-            if ( ($auto_updates_type = get_post_meta( $post_id, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0') !== '3' ) { return new \WP_REST_Response('Auto-updates are not enabled for post ID ' . $post_id, 400); }
+            if ( empty($data['repository']) || empty($data['repository']['html_url']) ) {
+                return new \WP_REST_Response('Repository URL is required', 400);
+            }
+            if ( !($post_id = get_post_id_by_meta_value(FCGBF_PREF.'rep-url', $data['repository']['html_url'])) ) {
+                return new \WP_REST_Response('Post not found for the given repository URL', 404);
+            }
+            if ( ($auto_updates_type = get_post_meta( $post_id, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0') !== '3' ) {
+                return new \WP_REST_Response('Auto-updates are not enabled for post ID ' . $post_id, 400);
+            }
 
             schedule_auto_update($post_id, null, true, time());
             return new \WP_REST_Response('Auto-update scheduled for post ID ' . $post_id, 200);
