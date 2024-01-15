@@ -21,8 +21,9 @@ add_action( 'rest_api_init', function () {
             if ( ($auto_updates_type = get_post_meta( $post_id, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0') !== '3' ) {
                 return new \WP_REST_Response('Auto-updates are not enabled for post ID ' . $post_id, 400);
             }
-
-            schedule_auto_update($post_id, '3', true, time());
+            if ( $result = schedule_auto_update($post_id, '3', true, time()) !== 'updateEventAdded' ) {
+                return new \WP_REST_Response('Scheduling error: ' . $result, 418);
+            }
             return new \WP_REST_Response('Auto-update scheduled for post ID ' . $post_id, 200);
 
         },
