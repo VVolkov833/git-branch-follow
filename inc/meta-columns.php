@@ -23,8 +23,8 @@ add_action('manage_'.FCGBF_SLUG.'_posts_custom_column', function($column, $post_
         break;
         case FCGBF_SLUG.'rep_auto_updates':
             $auto_updates_type = get_post_meta( $post_id, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0';
-            echo ['0' => 'Off', '1' => 'Enabled', '2' => 'Force'][ $auto_updates_type ];
-            if ( $auto_updates_type === '0' ) { break; }
+            echo ['0' => 'Off', '1' => 'Enabled', '2' => 'Force', '3' => 'Webhook'][ $auto_updates_type ];
+            if ( in_array($auto_updates_type, ['0', '3']) ) { break; }
             echo next_update_in($post_id);
             if ( !FCGBF_DEV ) { break; };
             echo next_check_in();

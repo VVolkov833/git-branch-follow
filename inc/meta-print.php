@@ -122,10 +122,12 @@ function auto_updates() {
 
     <p>The <em>Force</em> option will run the process every scheduled time even if there are no new commits</p>
     
-    <p>The <em>Webhook</em> URL: <br><?php echo home_url('/wp-json/fcgbf/v1/update/') ?></p>
+    <?php if ( !in_array($auto_updates_type, ['3']) ) { ?>
+        <p>The <em>Webhook</em> URL: <br><?php echo home_url('/wp-json/fcgbf/v1/update/') ?></p>
+    <?php } ?>
 
     <?php
-    if ( $auto_updates_type !== '0' ) {
+    if ( !in_array($auto_updates_type, ['0', '3']) ) {
         echo $trigger_next_time;
         echo next_check_in();
     }

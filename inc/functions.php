@@ -171,7 +171,7 @@ function schedule_auto_update($postID, $updateType = null, $hasUpdates = null, $
 
     wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
 
-    if ( $updateType === '0' ) { return 'updateEventCleared'; }
+    if ( in_array($updateType, ['0', '3']) ) { return 'updateEventCleared'; }
 
     $hasUpdates ??= get_post_meta($postID, FCGBF_PREF.'rep-new')[0] ?? false;
     $hasUpdates = !!(function() use ($updateType, $hasUpdates) {
@@ -180,6 +180,7 @@ function schedule_auto_update($postID, $updateType = null, $hasUpdates = null, $
             case '1': return $hasUpdates;
             case '2': return true;
             case '3': return true;
+            // ++ add webhook and force option
         };
     })();
     if ( $hasUpdates === false ) { return ''; }

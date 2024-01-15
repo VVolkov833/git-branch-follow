@@ -3,11 +3,11 @@
 namespace FC\GitBranchFollow;
 defined( 'ABSPATH' ) || exit;
 
-// install / uninstall is in install.php
+// permanent hooks are in install.php
 
 // trash / untrash
 add_action( 'trashed_post', function($postID) {
-    schedule_auto_update( $postID, '0' );
+    schedule_auto_update( $postID, '0' ); // clear
 });
 add_action( 'untrashed_post', function($postID) {
     if ( get_post_type( $postID ) !==  FCGBF_SLUG ) { return; }
@@ -31,7 +31,7 @@ add_action( FCGBF_SLUG.'_auto_checks', 'FC\GitBranchFollow\auto_checks_hook', 10
 function auto_checks_hook() {    
     global $wpdb;
 
-    // ++ exclude those with auto-update type === '0'?
+    // ++ exclude those with auto-update type === '0' and '3'?
     $post_ids = $wpdb->get_col($wpdb->prepare(
         "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s",
         FCGBF_SLUG, 'publish'

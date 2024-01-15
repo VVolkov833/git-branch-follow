@@ -45,7 +45,6 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
-++ fix new api
 ++ extend the type logic to '3'
 should I cancel the checks for repositoreis without auto-updates?
 add webooks support
