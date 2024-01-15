@@ -171,7 +171,7 @@ function schedule_auto_update($postID, $updateType = null, $hasUpdates = null, $
 
     wp_clear_scheduled_hook( FCGBF_SLUG.'_auto_updates', [$postID] );
 
-    if ( in_array($updateType, ['0', '3']) ) { return 'updateEventCleared'; }
+    if ( in_array($updateType, ['0']) ) { return 'updateEventCleared'; }
 
     $hasUpdates ??= get_post_meta($postID, FCGBF_PREF.'rep-new')[0] ?? false;
     $hasUpdates = !!(function() use ($updateType, $hasUpdates) {

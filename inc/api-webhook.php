@@ -22,7 +22,7 @@ add_action( 'rest_api_init', function () {
                 return new \WP_REST_Response('Auto-updates are not enabled for post ID ' . $post_id, 400);
             }
 
-            schedule_auto_update($post_id, null, true, time());
+            schedule_auto_update($post_id, '3', true, time());
             return new \WP_REST_Response('Auto-update scheduled for post ID ' . $post_id, 200);
 
         },
