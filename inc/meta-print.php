@@ -120,10 +120,15 @@ function auto_updates() {
         ]);
     ?>
 
-    <p>The <em>Force</em> option will run the process every scheduled time even if there are no new commits</p>
+    <?php if ( in_array($auto_updates_type, ['2']) ) { ?>
+        <p>The <em>Force</em> option will run the process every scheduled time even if there are no new commits</p>
+    <?php } ?>
     
-    <?php if ( !in_array($auto_updates_type, ['3']) ) { ?>
-        <p>The <em>Webhook</em> URL: <br><?php echo home_url('/wp-json/fcgbf/v1/update/') ?></p>
+    <?php if ( in_array($auto_updates_type, ['3']) ) { ?>
+        <p>
+            The <em>Webhook</em> URL: <br>
+            <input type="text" value="<?php echo esc_attr( home_url('/wp-json/fcgbf/v1/update/') ) ?>" style="width:100%" onclick="this.select()" />
+        </p>
     <?php } ?>
 
     <?php
