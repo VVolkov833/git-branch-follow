@@ -127,7 +127,7 @@ function auto_updates() {
     <?php if ( in_array($auto_updates_type, ['3']) ) { ?>
         <p>
             The <em>Webhook</em> URL: <br>
-            <input type="text" value="<?php echo esc_attr( home_url('/wp-json/fcgbf/v1/update/') ) ?>" style="width:100%" onclick="this.select()" />
+            <input type="text" value="<?php echo esc_attr( home_url('/wp-json/fcgbf/v1/update/') ) ?>" style="width:100%" onclick="this.select()" readonly />
         </p>
     <?php } ?>
 
