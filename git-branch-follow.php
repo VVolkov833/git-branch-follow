@@ -64,4 +64,7 @@ allow to select an older commit and disable updates at the same time
 add other popular git reps
 hide negative values of scheduled events
 clear/postphone the update scheduled after the update is successful
+lighspeed cache interferes with the api - try to walk around?
+[[]] copy button for webhook
+() closed eye button for api key
 */
