@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Git Branch Follow
-Description: Connect to GitHub repositories, automatically track changes across branches, and ensure your plugins and themes are always up-to-date. Simplify your WordPress management with this seamless integration.
+Description: Enhance your custom WordPress plugins or themes development experience by seamlessly integrating with GitHub. This plugin tracks the new commits, allowing you to update your website with the latest changes.
 Version: 1.1.1
 Requires at least: 6.0
 Tested up to: 6.4
@@ -47,7 +47,6 @@ require_once FCGBF_DIR . 'inc/install.php';
 /* future improvements
 ++ extend the type logic to '3'
 should I cancel the checks for repositoreis without auto-updates?
-add webooks support
 buttons to the list
 	+refactor
 	+improve the columns ux

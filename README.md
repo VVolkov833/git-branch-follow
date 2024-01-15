@@ -1,11 +1,11 @@
 # Git Follow Branch
 
-**GitHub Integration for WordPress:** Enhance your custom WordPress plugins or themes development experience by seamlessly integrating with GitHub. This plugin checks for new commits, allowing you to effortlessly update your website with the latest changes.
+**GitHub Integration for WordPress:** Enhance your custom WordPress plugins or themes development experience by seamlessly integrating with GitHub. This plugin tracks the new commits, allowing you to update your website with the latest changes.
 
 ## Features
 
 * Checks for updates every 12 hours or by click
-* Auto updates off/on/force
+* Auto updates off/on/force/webhook
 * Works with public and private repositories
 * Pure PHP, good for cheap or shared hosting
 * Doesn't depend on the WP native updating processes
