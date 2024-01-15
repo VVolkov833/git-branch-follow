@@ -45,26 +45,26 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
-++ extend the type logic to '3'
-should I cancel the checks for repositoreis without auto-updates?
+hide negative values of scheduled events or change to now
+[[]] copy button for webhook
+() closed eye button for api key
 buttons to the list
 	+refactor
 	+improve the columns ux
+allow to select an older commit and disable updates at the same time
+		'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/commits?per_page=20&sha='.$args['rep_branch']
+		'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/zipball/{commit_sha}
+add other popular git reps
+
+should I cancel the checks for repositoreis without auto-updates?
 mark mentioned in themes & plugins admin
 	also add UPPERCASE TEXT FILE TO THEME/PLUGIN DIR THAT THE CHANGES ARE CONTROLLED BY GIT
 		DIRECT-CHANGES-IN-THIS-FOLDER-OVERRIDES
 			delete on uninstall
 lines marked with ++
-on some fails restoration can be scheduled
+on some fails restoration can be scheduled?
 add notice to the editor to existing reps, that the changes will be overridden
-allow to select an older commit and disable updates at the same time
-		'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/commits?per_page=20&sha='.$args['rep_branch']
-		'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/zipball/{commit_sha}
-add other popular git reps
-hide negative values of scheduled events
 clear/postphone the update scheduled after the update is successful
 lighspeed cache interferes with the api - try to walk around?
-[[]] copy button for webhook
-() closed eye button for api key
 track existing reps with similar destination folders?
 */
