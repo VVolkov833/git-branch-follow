@@ -21,10 +21,14 @@ add_action( 'rest_api_init', function () {
             if ( ($auto_updates_type = get_post_meta( $post_id, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0') !== '3' ) {
                 return new \WP_REST_Response('Auto-updates are not enabled for post ID ' . $post_id, 400);
             }
-            if ( $result = schedule_auto_update($post_id, '3', true, time()) !== 'updateEventAdded' ) {
-                return new \WP_REST_Response('Scheduling error: ' . $result, 418);
+            if ( is_wp_error( $result = processGitRequest(['id' => $post_id, 'action' => 'install']) ) ) {
+                if ( FCGBF_DEV ) { error_log($post_id); error_log($result); }
+                if ( $result = schedule_auto_update($post_id, '3', true, time()) !== 'updateEventAdded' ) { // try to schedule on fail
+                    return new \WP_REST_Response('Scheduling error: ' . $result, 418);
+                }
+                return new \WP_REST_Response('Auto-update SCHEDULED for post ID ' . $post_id, 200);
             }
-            return new \WP_REST_Response('Auto-update scheduled for post ID ' . $post_id, 200);
+            return new \WP_REST_Response('Auto-update EXECUTED for post ID ' . $post_id, 200);
 
         },
         'permission_callback' => function() {
