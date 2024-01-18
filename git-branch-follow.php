@@ -2,7 +2,7 @@
 /*
 Plugin Name: Git Branch Follow
 Description: Enhance your custom WordPress plugins or themes development experience by seamlessly integrating with GitHub. This plugin tracks the new commits, allowing you to update your website with the latest changes.
-Version: 1.1.1
+Version: 1.1.2
 Requires at least: 6.0
 Tested up to: 6.4
 Requires PHP: 7.4
@@ -45,14 +45,23 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
-!! remove webhook and no from checks as other commits in No state won't need that else disturbs
-try to clear the caches on webhook or add a checkbox
-hide negative values of scheduled events or change to now
 [[]] copy button for webhook
 () closed eye button for api key
+think through the columns
+	rep name
+	platform
+	destination
+	auto-updates
+	has updates along with buttons as Options
+		check if can run many at once
+		add loader
+hide negative values of scheduled events or change to now
+!! remove webhook and no from checks as other commits in No state won't need that else disturbs
 buttons to the list
 	+refactor
 	+improve the columns ux
+try to clear the caches on webhook or add a checkbox
+disable fetching buttons if changes are performed, but not saved (or alert on click)
 allow to select an older commit and disable updates at the same time
 		'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/commits?per_page=20&sha='.$args['rep_branch']
 		'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/zipball/{commit_sha}

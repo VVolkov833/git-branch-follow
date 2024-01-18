@@ -44,10 +44,11 @@ function rep_infos() {
             'value' => get_post_meta( $post->ID, FCGBF_PREF.'rep-url' )[0] ?? '',
         ]);
 
-        input( (object) [
+        password( (object) [
             'name' => 'rep-api-key',
             'title' => 'GitHub API Key',
-            'placeholder' => 'ghp_aAAaAAAAaaAaaAAaaAaAAaAAaaAAaAAAAaaA',
+            'placeholder' => 'ghp_....',
+                                  
             'value' => get_post_meta( $post->ID, FCGBF_PREF.'rep-api-key' )[0] ?? '',
         ]);
 

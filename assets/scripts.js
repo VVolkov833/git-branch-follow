@@ -29,7 +29,7 @@
         return result;    
     }
 
-    const fetch_data = action => {
+    const fetchData = action => {
         return async () => {
             const post_id = val(`#post_ID`);
             const nonce = val(`#${PREF}rest-nonce`);
@@ -82,6 +82,30 @@
         };
     };
 
+    const addToggleButton = input => {
+        //if (input.value.trim() === '') { return }
+
+        const buttonHTML = `
+            <button type="button" class="button button-secondary wp-hide-pw" data-toggle="0" aria-label="Show password">
+                <span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+            </button>
+        `;
+
+        const buttonElement = new DOMParser().parseFromString(buttonHTML, 'text/html').body.firstChild;
+        input.parentNode.insertBefore(buttonElement, input);
+        const iconElement = buttonElement.querySelector('.dashicons');
+
+        buttonElement.addEventListener('click', () => {
+            iconElement.classList.remove('dashicons-visibility', 'dashicons-hidden');
+            if (input.type === 'password') {
+                input.type = 'text';
+                buttonElement.querySelector('.dashicons').classList.add('dashicons-hidden');
+            } else {
+                input.type = 'password';
+                buttonElement.querySelector('.dashicons').classList.add('dashicons-visibility');
+            }
+        });
+    };
 
     let a = setInterval(function() {
         const d = document;
@@ -94,8 +118,8 @@
         a = null;
 
         // fetch events
-        el('#fcgbf-rep-check').addEventListener('click', e => fetch_data('check')());
-        el('#fcgbf-rep-install').addEventListener('click', e => fetch_data('install')());
+        el('#fcgbf-rep-check').addEventListener('click', e => fetchData('check')());
+        el('#fcgbf-rep-install').addEventListener('click', e => fetchData('install')());
 
         // limit status options
         // editor screen
@@ -103,6 +127,10 @@
         //el( `#minor-publishing` ).remove(); // doesn't submit without it
         el( `#publish` ).setAttribute( 'name', 'save' );
         el( `#publish` ).value = `Save`;
+
+        // password field visibility toggle eye
+        const passwordFields = document.querySelectorAll(`.${PREF}fields input[type=password]`);
+        passwordFields.forEach( pw => addToggleButton(pw) );
 
     }, 300);
 })();

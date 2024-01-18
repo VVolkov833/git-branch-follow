@@ -11,8 +11,12 @@
     align-items: center;
     gap: 10px;
 }
-.fcgbf-fields input {
+.fcgbf-fields input, .fcgbf-fields fieldset {
     flex: 1;
+}
+.fcgbf-fields > fieldset {
+    display: flex;
+    position: relative;
 }
 #fcgbf-rep-branch {
     max-width: 100px;
@@ -65,4 +69,15 @@ button.fcgbf-update-available {
 /* auto-update */
 .fcgbf-auto-update select {
     width: 100%;
+}
+
+/* helpful buttons */
+.fcgbf-fields .wp-hide-pw {
+    position: absolute;
+    right: 0;
+    border: none !important;
+    background: none !important;
+}
+.fcgbf-fields .wp-hide-pw + input {
+    padding-right: 42px;
 }
