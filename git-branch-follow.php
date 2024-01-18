@@ -45,8 +45,8 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
-!! webhook try to fetch instantly and schedule on fail
 !! remove webhook and no from checks as other commits in No state won't need that else disturbs
+try to clear the caches
 hide negative values of scheduled events or change to now
 [[]] copy button for webhook
 () closed eye button for api key
