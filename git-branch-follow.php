@@ -46,7 +46,11 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 /* future improvements
 [[]] copy button for webhook
-() closed eye button for api key
+	change to check for a short period of time?
+add remark about json format for webhook
+add the comment field for setting
+	like webhook returns 504
+		maybe set timeout on execution and add schedule?
 think through the columns
 	rep name
 	platform
@@ -78,4 +82,6 @@ add notice to the editor to existing reps, that the changes will be overridden
 clear/postphone the update scheduled after the update is successful
 lighspeed cache interferes with the api - try to walk around?
 track existing reps with similar destination folders?
+webhook execute and webhook schedule options?
+print "scheduled for now" or "executing / updating now" if single hook exists now and print time if single hook exists
 */
