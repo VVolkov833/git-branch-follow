@@ -82,29 +82,58 @@
         };
     };
 
-    const addToggleButton = input => {
-        //if (input.value.trim() === '') { return }
 
+    const addHelpingButton = (input, title, dashicon) => {
         const buttonHTML = `
-            <button type="button" class="button button-secondary wp-hide-pw" data-toggle="0" aria-label="Show password">
-                <span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+            <button type="button" class="${PREF}button-after-field" title="${title}">
+                ${dashicon ? `<span class="dashicons dashicons-${dashicon}" aria-hidden="true"></span>` : title}
             </button>
         `;
-
         const buttonElement = new DOMParser().parseFromString(buttonHTML, 'text/html').body.firstChild;
-        input.parentNode.insertBefore(buttonElement, input);
-        const iconElement = buttonElement.querySelector('.dashicons');
+        input.parentNode.insertBefore(buttonElement, input.nextSibling);
+        const iconElement = dashicon ? buttonElement.querySelector('.dashicons') : null;
 
+        return {buttonElement, iconElement};
+    };
+
+    const addPasswordToggle = input => {
+        const {buttonElement, iconElement} = addHelpingButton(input, 'Show password toggle', 'visibility');
         buttonElement.addEventListener('click', () => {
             iconElement.classList.remove('dashicons-visibility', 'dashicons-hidden');
             if (input.type === 'password') {
                 input.type = 'text';
-                buttonElement.querySelector('.dashicons').classList.add('dashicons-hidden');
+                iconElement.classList.add('dashicons-hidden');
             } else {
                 input.type = 'password';
-                buttonElement.querySelector('.dashicons').classList.add('dashicons-visibility');
+                iconElement.classList.add('dashicons-visibility');
             }
         });
+    };
+
+    const addContentCopy = input => {
+        const {buttonElement, iconElement} = addHelpingButton(input, 'Copy to Clipboard', 'admin-page');
+        const restore = () => {
+            iconElement.classList.remove('dashicons-saved', 'dashicons-no-alt');
+            iconElement.classList.add('dashicons-admin-page');
+        };
+        buttonElement.addEventListener('click', async () => {
+            input.select();
+            iconElement.classList.remove('dashicons-admin-page');
+            try {
+                if (navigator.clipboard) {
+                    await navigator.clipboard.writeText(input.value);
+                } else {
+                    document.execCommand('copy');
+                }
+                iconElement.classList.add('dashicons-saved');
+            } catch (err) {
+                iconElement.classList.add('dashicons-no-alt');
+                console.error('Unable to copy to clipboard:', err);
+            }
+            window.getSelection().removeAllRanges();
+            buttonElement.focus();
+        });
+        buttonElement.addEventListener('blur', restore);
     };
 
     let a = setInterval(function() {
@@ -128,9 +157,13 @@
         el( `#publish` ).setAttribute( 'name', 'save' );
         el( `#publish` ).value = `Save`;
 
-        // password field visibility toggle eye
+        // password field visibility toggle eye button
         const passwordFields = document.querySelectorAll(`.${PREF}fields input[type=password]`);
-        passwordFields.forEach( pw => addToggleButton(pw) );
+        passwordFields.forEach( el => addPasswordToggle(el) );
+
+        // webhook url field copy button
+        const readonlyFields = document.querySelectorAll(`.${PREF}auto-update input[readonly]`);
+        readonlyFields.forEach( el => addContentCopy(el) );
 
     }, 300);
 })();

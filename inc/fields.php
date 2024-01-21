@@ -19,16 +19,14 @@ function input($a) {
 
 function password($a) {
     ?>
-    <fieldset>
-        <input type="password"
-            name="<?php echo esc_attr( FCGBF_PREF.$a->name ) ?>"
-            id="<?php echo esc_attr( FCGBF_PREF.$a->name ) ?>"
-            placeholder="<?php echo isset( $a->placeholder ) ? esc_attr( $a->placeholder )  : '' ?>"
-            title="<?php echo isset( $a->title ) ? esc_attr( $a->title ) : '' ?>"
-            value="<?php echo isset( $a->value ) ? esc_attr( $a->value ) : '' ?>"
-            class="<?php echo isset( $a->className ) ? esc_attr( $a->className ) : '' ?>"
-        />
-    </fieldset>
+    <input type="password"
+        name="<?php echo esc_attr( FCGBF_PREF.$a->name ) ?>"
+        id="<?php echo esc_attr( FCGBF_PREF.$a->name ) ?>"
+        placeholder="<?php echo isset( $a->placeholder ) ? esc_attr( $a->placeholder )  : '' ?>"
+        title="<?php echo isset( $a->title ) ? esc_attr( $a->title ) : '' ?>"
+        value="<?php echo isset( $a->value ) ? esc_attr( $a->value ) : '' ?>"
+        class="<?php echo isset( $a->className ) ? esc_attr( $a->className ) : '' ?>"
+    />
     <?php
 }
 

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Git Branch Follow
 Description: Enhance your custom WordPress plugins or themes development experience by seamlessly integrating with GitHub. This plugin tracks the new commits, allowing you to update your website with the latest changes.
-Version: 1.1.2
+Version: 1.1.3
 Requires at least: 6.0
 Tested up to: 6.4
 Requires PHP: 7.4
@@ -45,9 +45,8 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
-[[]] copy button for webhook
-	change to check for a short period of time?
 add remark about json format for webhook
+	add webhook schedule and organize the options
 add the comment field for setting
 	like webhook returns 504
 		maybe set timeout on execution and add schedule?
