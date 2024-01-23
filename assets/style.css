@@ -1,7 +1,9 @@
-.fcgbf-fields {
+:root {
     --fcgbf-update-available-color: #16a34a;
-    --fcgbf-fields-gap: 10px;
-    --fcgbf-hbutton-width: 41px;
+}
+.fcgbf-fields {
+    --fields-gap: 10px;
+    --help-button-width: 41px;
 }
 
 /* meta decor */
@@ -11,7 +13,7 @@
 .fcgbf-fields {
     display: flex;
     align-items: center;
-    gap: var(--fcgbf-fields-gap);
+    gap: var(--fields-gap);
 }
 .fcgbf-fields input, .fcgbf-fields select, .fcgbf-fields fieldset {
     flex: 1;
@@ -31,7 +33,7 @@
 }
 .fcgbf-infos {
     display: flex;
-    gap: calc(var(--fcgbf-fields-gap) * 2);
+    gap: calc(var(--fields-gap) * 2);
 }
 .fcgbf-infos > * {
     width: 50%;
@@ -44,8 +46,8 @@
 
 /* highlights */
 button.fcgbf-update-available {
-    border-color: var(--fcgbf-update-available-color) !important;
-    color: var(--fcgbf-update-available-color) !important;
+    border-color: var(--update-available-color) !important;
+    color: var(--update-available-color) !important;
 }
 
 /* loading */
@@ -74,9 +76,9 @@ button.fcgbf-update-available {
 /* helpful buttons */
 .fcgbf-button-after-field {
     appearance: none;
-    width: var(--fcgbf-hbutton-width);
+    width: var(--help-button-width);
     min-height: 30px;
-    margin: 0 0 0 calc(-1 * (var(--fcgbf-hbutton-width) + var(--fcgbf-fields-gap) + 1px));
+    margin: 0 0 0 calc(-1 * (var(--help-button-width) + var(--fields-gap) + 1px));
     border: 1px solid transparent;
     padding: 2px;
     box-sizing: border-box;
@@ -85,5 +87,5 @@ button.fcgbf-update-available {
     cursor: pointer;
 }
 .fcgbf-button-after-padding {
-    padding-right: var(--fcgbf-hbutton-width) !important;
+    padding-right: var(--help-button-width) !important;
 }
