@@ -126,12 +126,11 @@ function auto_updates() {
     <?php } ?>
     
     <?php if ( in_array($auto_updates_type, ['3']) ) { ?>
-        <p>
-            The <em>Webhook</em> URL: <br>
-            <div class="<?php echo FCGBF_PREF ?>fields">
-                <input type="text" value="<?php echo esc_attr( home_url('/wp-json/fcgbf/v1/update/') ) ?>" onclick="this.select()" readonly />
-            </div>
+        <p class="<?php echo FCGBF_PREF ?>fields">
+            <input type="text" value="<?php echo esc_attr( home_url('/wp-json/fcgbf/v1/update/') ) ?>" onclick="this.select()" readonly title="The Webhook / Payload URL"/>
         </p>
+        <p>Content type: application/json</p>
+        <p>Secret: comming soon</p>
     <?php } ?>
 
     <?php
