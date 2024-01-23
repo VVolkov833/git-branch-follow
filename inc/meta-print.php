@@ -112,7 +112,8 @@ function auto_updates() {
     $auto_updates_type = get_post_meta( $post->ID, FCGBF_PREF.'rep-auto-updates' )[0] ?? '0';
 
     ?>
-    <div class="<?php echo FCGBF_PREF ?>auto-update">
+
+    <p class="<?php echo FCGBF_PREF ?>fields">
     <?php
         select( (object) [
             'name' => 'rep-auto-updates',
@@ -120,6 +121,7 @@ function auto_updates() {
             'value' => $auto_updates_type,
         ]);
     ?>
+    </p>
 
     <?php if ( in_array($auto_updates_type, ['2']) ) { ?>
         <p>The <em>Force</em> option will run the process every scheduled time even if there are no new commits</p>
@@ -140,7 +142,6 @@ function auto_updates() {
     }
     ?>
 
-    </div>
     <?php
 }
 

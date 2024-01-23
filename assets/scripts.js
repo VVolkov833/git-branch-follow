@@ -163,7 +163,7 @@
         passwordFields.forEach( el => addPasswordToggle(el) );
 
         // webhook url field copy button
-        const readonlyFields = document.querySelectorAll(`.${PREF}auto-update input[readonly]`);
+        const readonlyFields = document.querySelectorAll(`.${PREF}fields input[readonly]`);
         readonlyFields.forEach( el => addContentCopy(el) );
 
     }, 300);
