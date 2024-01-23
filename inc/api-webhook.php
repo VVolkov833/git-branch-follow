@@ -45,7 +45,7 @@ add_action( 'rest_api_init', function () {
 function get_post_id_by_meta_value($meta_key, $meta_value) {
     global $wpdb;
 
-    $query = $wpdb->prepare(
+    return $wpdb->get_var( $wpdb->prepare(
         "SELECT post_id FROM $wpdb->postmeta
         JOIN $wpdb->posts ON $wpdb->postmeta.post_id = $wpdb->posts.ID
         WHERE $wpdb->postmeta.meta_key = %s
@@ -55,9 +55,5 @@ function get_post_id_by_meta_value($meta_key, $meta_value) {
         $meta_key,
         $meta_value,
         FCGBF_SLUG
-    );
-
-    $post_id = $wpdb->get_var($query);
-
-    return $post_id;
+    ));
 }

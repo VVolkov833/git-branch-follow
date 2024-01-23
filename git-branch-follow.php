@@ -45,8 +45,6 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
-hide negative values of scheduled events or change to now
-!! remove webhook and off from checks as other commits in Off state won't need that else disturbs
 think through the columns
 	rep name
 	platform

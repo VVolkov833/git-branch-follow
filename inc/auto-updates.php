@@ -31,10 +31,21 @@ add_action( FCGBF_SLUG.'_auto_checks', 'FC\GitBranchFollow\auto_checks_hook', 10
 function auto_checks_hook() {    
     global $wpdb;
 
-    // ++ exclude those with auto-update type === '0' and '3'?
-    $post_ids = $wpdb->get_col($wpdb->prepare(
-        "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s",
-        FCGBF_SLUG, 'publish'
+    $exclude = ['', '0', '3']; // auto-updates are off or webhook ++ replace with just in in future
+    $placeholder = implode(', ', array_fill(0, count($exclude), '%s'));
+
+    $post_ids = $wpdb->get_col( $wpdb->prepare(
+        "SELECT post_id FROM $wpdb->postmeta
+        JOIN $wpdb->posts ON $wpdb->postmeta.post_id = $wpdb->posts.ID
+        WHERE $wpdb->postmeta.meta_key = %s
+        AND $wpdb->postmeta.meta_value NOT IN ({$placeholder})
+        AND $wpdb->posts.post_type = %s
+        AND $wpdb->posts.post_status = 'publish'",
+        array_merge(
+            [FCGBF_PREF.'rep-auto-updates'],
+            $exclude,
+            [FCGBF_SLUG]
+        )
     ));
 
     foreach ($post_ids as $post_id) {
