@@ -92,6 +92,7 @@
         const buttonElement = new DOMParser().parseFromString(buttonHTML, 'text/html').body.firstChild;
         input.parentNode.insertBefore(buttonElement, input.nextSibling);
         const iconElement = dashicon ? buttonElement.querySelector('.dashicons') : null;
+        input.classList.add('fcgbf-button-after-padding');
 
         return {buttonElement, iconElement};
     };

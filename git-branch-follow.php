@@ -15,7 +15,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 namespace FC\GitBranchFollow;
 defined( 'ABSPATH' ) || exit;
 
-define( 'FCGBF_DEV', false );
+define( 'FCGBF_DEV', true );
 define( 'FCGBF_VER', get_file_data( __FILE__, [ 'ver' => 'Version' ] )[ 'ver' ] . ( FCGBF_DEV ? time() : '' ) );
 define( 'FCGBF_REGISTER', __FILE__ );
 
@@ -45,7 +45,6 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
-helping button - strict w&h, no border, fully over, transparent, input - padding right
 add remark about json format for webhook
 hide negative values of scheduled events or change to now
 !! remove webhook and off from checks as other commits in Off state won't need that else disturbs

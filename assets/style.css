@@ -1,5 +1,7 @@
-:root {
+.fcgbf-fields {
     --fcgbf-update-available-color: #16a34a;
+    --fcgbf-fields-gap: 10px;
+    --fcgbf-hbutton-width: 41px;
 }
 
 /* meta decor */
@@ -9,7 +11,7 @@
 .fcgbf-fields {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--fcgbf-fields-gap);
 }
 .fcgbf-fields input, .fcgbf-fields fieldset {
     flex: 1;
@@ -26,7 +28,7 @@
 }
 .fcgbf-infos {
     display: flex;
-    gap: 20px;
+    gap: calc(var(--fcgbf-fields-gap) * 2);
 }
 .fcgbf-infos > * {
     width: 50%;
@@ -74,17 +76,16 @@ button.fcgbf-update-available {
 /* helpful buttons */
 .fcgbf-button-after-field {
     appearance: none;
+    width: var(--fcgbf-hbutton-width);
     min-height: 30px;
-    margin: 0 0 0 -14px;
-    border: 1px solid #8c8f94;
-    border-width: 1px 1px 1px 0;
-    border-radius: 0 4px 4px 0;
-    padding: 0 10px;
+    margin: 0 0 0 calc(-1 * (var(--fcgbf-hbutton-width) + var(--fcgbf-fields-gap) + 1px));
+    border: 1px solid transparent;
+    padding: 2px;
     box-sizing: border-box;
-    background-color: #fff;
+    background: none;
     color: #8c8f94;
     cursor: pointer;
 }
-[readonly] + .fcgbf-button-after-field {
-    background-color: #f0f0f1;
+.fcgbf-button-after-padding {
+    padding-right: var(--fcgbf-hbutton-width) !important;
 }
