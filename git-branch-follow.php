@@ -45,11 +45,10 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
+helping button - strict w&h, no border, fully over, transparent, input - padding right
 add remark about json format for webhook
-	add webhook schedule and organize the options
-add the comment field for setting
-	like webhook returns 504
-		maybe set timeout on execution and add schedule?
+hide negative values of scheduled events or change to now
+!! remove webhook and off from checks as other commits in Off state won't need that else disturbs
 think through the columns
 	rep name
 	platform
@@ -58,8 +57,6 @@ think through the columns
 	has updates along with buttons as Options
 		check if can run many at once
 		add loader
-hide negative values of scheduled events or change to now
-!! remove webhook and no from checks as other commits in No state won't need that else disturbs
 buttons to the list
 	+refactor
 	+improve the columns ux
@@ -83,4 +80,6 @@ lighspeed cache interferes with the api - try to walk around?
 track existing reps with similar destination folders?
 webhook execute and webhook schedule options?
 print "scheduled for now" or "executing / updating now" if single hook exists now and print time if single hook exists
+add secret as the default option
+Schedule with Delay option?
 */

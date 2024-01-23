@@ -10,6 +10,8 @@ add_action( 'rest_api_init', function () {
         'methods'  => 'POST',
         'callback' => function(\WP_REST_Request $request) {
 
+            set_time_limit(30); // ++ set to zero when secret is implemented
+
             $data = $request->get_json_params();
 
             if ( empty($data['repository']) || empty($data['repository']['html_url']) ) {
@@ -32,7 +34,6 @@ add_action( 'rest_api_init', function () {
 
         },
         'permission_callback' => function() {
-            //if ( empty( $_SERVER['HTTP_REFERER'] ) ) { return false; }
             return true;
         },
         'args' => [],
