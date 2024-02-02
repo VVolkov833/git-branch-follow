@@ -45,6 +45,9 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
+flush the history & current on rep change
+commit comment can contain tags
+exclude Force from auto-checks too?
 think through the columns
 	rep name
 	platform
@@ -53,6 +56,12 @@ think through the columns
 	has updates along with buttons as Options
 		check if can run many at once
 		add loader
+	add the check in to the th
+	improve overall ui
+	!last updated
+	commit details?
+fix the timing?
+improve the editor ui
 buttons to the list
 	+refactor
 	+improve the columns ux
@@ -63,7 +72,6 @@ allow to select an older commit and disable updates at the same time
 		'https://api.github.com/repos/'.$args['rep_author'].'/'.$args['rep_name'].'/zipball/{commit_sha}
 add other popular git reps
 
-should I cancel the checks for repositoreis without auto-updates?
 mark mentioned in themes & plugins admin
 	also add UPPERCASE TEXT FILE TO THEME/PLUGIN DIR THAT THE CHANGES ARE CONTROLLED BY GIT
 		DIRECT-CHANGES-IN-THIS-FOLDER-OVERRIDES
@@ -74,8 +82,5 @@ add notice to the editor to existing reps, that the changes will be overridden
 clear/postphone the update scheduled after the update is successful
 lighspeed cache interferes with the api - try to walk around?
 track existing reps with similar destination folders?
-webhook execute and webhook schedule options?
-print "scheduled for now" or "executing / updating now" if single hook exists now and print time if single hook exists
-add secret as the default option
-Schedule with Delay option?
+add secret
 */
