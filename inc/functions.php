@@ -121,9 +121,12 @@ function processGitRequest($request) { //[id, action]
     if ( is_wp_error( $gitResponse ) ) { return $gitResponse; }
 
     $gitResponseCode = wp_remote_retrieve_response_code( $gitResponse );
-    if ( $gitResponseCode !== 200 ) { return ['body' => $gitResponse, 'code' => $gitResponseCode]; }
+    if ( $gitResponseCode !== 200 ) { return ['body' => stripslashes( $gitResponse ), 'code' => $gitResponseCode]; }
 
-    $gitResponseBody = json_decode(stripslashes(wp_remote_retrieve_body( $gitResponse )));
+    $gitResponseBody = wp_remote_retrieve_body( $gitResponse );
+    if ( $gitResponseBody === '' ) { return ['body' => stripslashes( $gitResponse ), 'code' => 418]; }
+
+    $gitResponseBody = json_decode(stripslashes( $gitResponseBody ));
 
     $gitResponseBody->extended_locally = [];
 

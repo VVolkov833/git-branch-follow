@@ -45,6 +45,7 @@ require_once FCGBF_DIR . 'inc/install.php';
 
 
 /* future improvements
+install button doesn't become green any more :(
 flush the history & current on rep change
 commit comment can contain tags
 exclude Force from auto-checks too?
