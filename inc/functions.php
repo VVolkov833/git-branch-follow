@@ -120,10 +120,10 @@ function processGitRequest($request) { //[id, action]
     $gitResponse = gitBranchInfos($details);
     if ( is_wp_error( $gitResponse ) ) { return $gitResponse; }
 
-    $gitResponseBody = json_decode(stripslashes(wp_remote_retrieve_body( $gitResponse )));
     $gitResponseCode = wp_remote_retrieve_response_code( $gitResponse );
+    if ( $gitResponseCode !== 200 ) { return ['body' => $gitResponse, 'code' => $gitResponseCode]; }
 
-    if ( $gitResponseCode !== 200 ) { return ['body' => $gitResponseBody, 'code' => $gitResponseCode]; }
+    $gitResponseBody = json_decode(stripslashes(wp_remote_retrieve_body( $gitResponse )));
 
     $gitResponseBody->extended_locally = [];
 
