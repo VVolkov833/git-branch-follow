@@ -9,6 +9,7 @@ add_filter('manage_'.FCGBF_SLUG.'_posts_columns', function($columns) {
     $columns[FCGBF_SLUG.'rep_dest'] = 'Directory';
     $columns[FCGBF_SLUG.'rep_new']  = 'Has updates';
     $columns[FCGBF_SLUG.'rep_auto_updates']  = 'Auto updates';
+    $columns[FCGBF_SLUG.'rep_last_update']  = 'Current commit';
     return $columns;
 });
 
@@ -28,6 +29,15 @@ add_action('manage_'.FCGBF_SLUG.'_posts_custom_column', function($column, $post_
             echo next_update_in($post_id);
             if ( !FCGBF_DEV ) { break; };
             echo next_check_in();
+        break;
+        case FCGBF_SLUG.'rep_last_update':
+            $data = get_post_meta( $post_id, FCGBF_PREF.'rep-current' )[0] ?? [];
+            if ( empty($data) ) { break; }
+            $commit = $data->commit->commit;
+            $committer = $commit->committer;
+            echo $committer->date ? esc_html($committer->date).'<br>' : '';
+            echo $commit->message ? esc_html($commit->message).'<br>' : '';
+            echo $committer->name ? esc_html($committer->name).'<br>' : '';
         break;
     }
 }, 10, 2);
