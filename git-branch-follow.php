@@ -33,6 +33,7 @@ define( 'FCGBF_ENDPOINT', FCGBF_SLUG.'/v1' );
 
 require_once FCGBF_DIR . 'inc/functions.php';
 require_once FCGBF_DIR . 'inc/post-type.php';
+require_once FCGBF_DIR . 'inc/interfering.php';
 require_once FCGBF_DIR . 'inc/fields.php';
 require_once FCGBF_DIR . 'inc/meta-print.php';
 require_once FCGBF_DIR . 'inc/meta-columns.php';

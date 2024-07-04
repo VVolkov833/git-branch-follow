@@ -241,3 +241,18 @@ function rcopy($src, $dst) {
     }
     return rmdir($folderPath);
 }
+
+
+function list_rep_posts() {
+    global $wpdb;
+
+    static $plugins_to_mark = null;
+    if ( $plugins_to_mark !== null ) { return $plugins_to_mark; }
+
+    $plugins_to_mark = $wpdb->get_results( $wpdb->prepare( "
+        SELECT ID, post_title FROM $wpdb->posts WHERE post_type = %s AND post_status != 'trash'
+        ",
+        FCGBF_SLUG
+    ));
+    return $plugins_to_mark;
+}
