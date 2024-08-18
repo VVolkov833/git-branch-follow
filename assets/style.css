@@ -46,8 +46,8 @@
 
 /* highlights */
 button.fcgbf-update-available {
-    border-color: var(--update-available-color) !important;
-    color: var(--update-available-color) !important;
+    border-color: var(--fcgbf-update-available-color) !important;
+    color: var(--fcgbf-update-available-color) !important;
 }
 
 /* loading */
