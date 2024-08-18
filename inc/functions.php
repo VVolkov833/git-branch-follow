@@ -79,6 +79,11 @@ function overrideDestination($args) {
 };
 
 function processGitRequest($request) { //[id, action]
+
+    // change memory limit and max execution time
+    ini_set( 'memory_limit', '256M' );
+    ini_set( 'max_execution_time', '30' ); // seconds
+
     //error_log('processGitRequest '.$request['id'].' '.$request['action']);
     if ( empty($request['id']) || empty($request['action'] )) {
         return new \WP_Error( 'no_arguments', 'Not enough arguments for processGitRequest', ['status' => 422] );

@@ -10,7 +10,7 @@ add_action( 'rest_api_init', function () {
         'methods'  => 'POST',
         'callback' => function(\WP_REST_Request $request) {
 
-            set_time_limit(30); // ++ set to zero when secret is implemented
+            //set_time_limit(30); // ++ set to zero when secret is implemented // ++--replaced with ini_set
 
             $data = $request->get_json_params();
 
